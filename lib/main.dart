@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primaryColor: Color(0xff03435c),
+        primaryColor: Color(0xff008dff),
+        primaryColorDark: Color(0xff03435c),
 
         buttonTheme: ButtonThemeData(
             buttonColor: Color(0xffff7200), textTheme: ButtonTextTheme.primary),

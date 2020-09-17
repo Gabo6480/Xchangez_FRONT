@@ -36,9 +36,9 @@ class _LoginPageState extends State<LoginPage> {
               height: mQuery.size.height * .27,
               decoration: BoxDecoration(
                   gradient: RadialGradient(
-                      center: Alignment.topLeft,
-                      radius: 15,
-                      colors: [theme.primaryColor, theme.accentColor]))),
+                      center: Alignment.bottomLeft,
+                      radius: 13,
+                      colors: [theme.primaryColorDark, theme.primaryColor]))),
           Center(
               child: Column(
             children: [
@@ -85,12 +85,15 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           TextFormField(
+                            obscureText: true,
                             decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.only(left: 8),
                                 suffixIcon: Icon(Icons.lock),
                                 labelText: "Contraseña"),
                             onSaved: (input) => _contrasena = input,
-                            obscureText: true,
+                            validator: (input) {
+                              return null;
+                            },
                           ),
                           SizedBox(
                             height: 10,
@@ -98,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                               width: double.infinity,
                               child: RaisedButton(
+                                  highlightElevation: 0,
                                   padding: EdgeInsets.symmetric(vertical: 15),
                                   child: Text("Ingresar"),
                                   onPressed: _summit)),
