@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'extensions/HoverCursor.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -14,7 +15,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
 
-  String _email;
+  String _email, _contrasena;
+
+  bool _remember = false;
 
   bool loginFail;
 
@@ -29,10 +32,13 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: theme.backgroundColor,
         body: Stack(children: [
           Container(
-            color: theme.primaryColor,
-            width: double.infinity,
-            height: mQuery.size.height * .27,
-          ),
+              width: double.infinity,
+              height: mQuery.size.height * .27,
+              decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                      center: Alignment.topLeft,
+                      radius: 15,
+                      colors: [theme.primaryColor, theme.accentColor]))),
           Center(
               child: Column(
             children: [
@@ -83,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                                 contentPadding: EdgeInsets.only(left: 8),
                                 suffixIcon: Icon(Icons.lock),
                                 labelText: "Contraseña"),
+                            onSaved: (input) => _contrasena = input,
                             obscureText: true,
                           ),
                           SizedBox(
@@ -93,12 +100,25 @@ class _LoginPageState extends State<LoginPage> {
                               child: RaisedButton(
                                   padding: EdgeInsets.symmetric(vertical: 15),
                                   child: Text("Ingresar"),
-                                  onPressed: () {})),
+                                  onPressed: _summit)),
                           SizedBox(
                             height: 5,
                           ),
-                          RichText(
-                              text: TextSpan(
+                          CheckboxListTile(
+                              value: _remember,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Text("Recuérdame"),
+                              onChanged: (value) {
+                                setState(() {
+                                  _remember = value;
+                                });
+                              }),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          HoverCursor(
+                              child: RichText(
+                                  text: TextSpan(
                             text: "¿Olvidaste tu contraseña?",
                             style: TextStyle(
                                 color: Colors.grey,
@@ -106,29 +126,31 @@ class _LoginPageState extends State<LoginPage> {
                                 decoration: TextDecoration.underline),
                             recognizer: new TapGestureRecognizer()
                               ..onTap = () {},
-                          )),
+                          ))),
                           Divider(
                             color: Colors.black26,
                             thickness: 1,
                           ),
-                          RichText(
-                              text: TextSpan(
-                                  text: "¿No tienes una cuenta? ",
-                                  style: TextStyle(color: Colors.grey),
-                                  children: [
-                                TextSpan(
-                                  text: "Regístrate",
-                                  style: TextStyle(
-                                      color: theme.accentColor,
-                                      decoration: TextDecoration.underline),
-                                  recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {},
-                                )
-                              ]))
+                          Text(
+                            "¿No tienes una cuenta? ",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          HoverCursor(
+                              child: RichText(
+                                  text: TextSpan(
+                            text: "Regístrate",
+                            style: TextStyle(
+                                color: theme.accentColor,
+                                decoration: TextDecoration.underline),
+                            recognizer: new TapGestureRecognizer()
+                              ..onTap = () {},
+                          )))
                         ],
                       )))
             ],
           ))
         ]));
   }
+
+  void _summit() async {}
 }
