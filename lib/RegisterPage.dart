@@ -107,6 +107,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                       prefixIcon: Icon(Icons.date_range),
                                       labelText: "Fecha de nacimiento",
                                     ),
+                                    //onSaved: (input) => _email = input,
+                                    validator: (value) {
+                                      return null;
+                                    },
                                     onShowPicker: (_context, _date) async {
                                       return showDatePicker(
                                           context: _context,
