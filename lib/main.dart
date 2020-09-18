@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'LoginPage.dart';
 
 void main() {
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Xchangez',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -41,6 +42,14 @@ class MyApp extends StatelessWidget {
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: LoginPage(),
+
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('es', ''), const Locale('en', '')],
     );
   }
 }

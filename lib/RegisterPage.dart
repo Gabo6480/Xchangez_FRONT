@@ -1,6 +1,7 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'extensions/HoverCursor.dart';
 
 import 'LoginPage.dart';
@@ -97,18 +98,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 SizedBox(
                                   height: inputSeparation,
                                 ),
-                                TextFormField(
-                                  keyboardType: TextInputType.datetime,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.only(left: 8),
-                                    prefixIcon: Icon(Icons.date_range),
-                                    labelText: "Fecha de Nacimiento",
-                                  ),
-                                  //onSaved: (input) => _email = input,
-                                  validator: (input) {
-                                    return null;
-                                  },
-                                )
+                                DateTimeField(
+                                    initialValue: DateTime.now(),
+                                    keyboardType: TextInputType.datetime,
+                                    format: DateFormat("dd / MM / yyyy"),
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 8),
+                                      prefixIcon: Icon(Icons.date_range),
+                                      labelText: "Fecha de nacimiento",
+                                    ),
+                                    onShowPicker: (_context, _date) async {
+                                      return showDatePicker(
+                                          context: _context,
+                                          locale: Locale("es"),
+                                          firstDate: DateTime(1900),
+                                          initialDate: _date ?? DateTime.now(),
+                                          lastDate: DateTime(2100));
+                                    })
                               ],
                             ),
                           ),
@@ -196,7 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       HoverCursor(
                           child: RichText(
                               text: TextSpan(
-                        text: "Ingresa",
+                        text: "Ingresar",
                         style: TextStyle(
                             color: theme.accentColor,
                             decoration: TextDecoration.underline),
