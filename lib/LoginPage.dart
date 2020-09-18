@@ -1,8 +1,7 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:xchangez/RegisterPage.dart';
 import 'extensions/HoverCursor.dart';
 
 class LoginPage extends StatefulWidget {
@@ -33,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         body: Stack(children: [
           Container(
               width: double.infinity,
-              height: mQuery.size.height * .27,
+              height: 200,
               decoration: BoxDecoration(
                   gradient: RadialGradient(
                       center: Alignment.bottomLeft,
@@ -62,10 +61,11 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFormField(
+                            keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.only(left: 8),
-                              suffixIcon: Icon(Icons.person),
-                              labelText: "Correo",
+                              suffixIcon: Icon(Icons.alternate_email),
+                              labelText: "Correo electrónico",
                             ),
                             onSaved: (input) => _email = input,
                             validator: (input) {
@@ -79,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               return null;
                             },
-                            keyboardType: TextInputType.emailAddress,
                           ),
                           SizedBox(
                             height: 10,
@@ -102,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: double.infinity,
                               child: RaisedButton(
                                   highlightElevation: 0,
-                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  padding: EdgeInsets.symmetric(vertical: 17),
                                   child: Text("Ingresar"),
                                   onPressed: _summit)),
                           SizedBox(
@@ -147,7 +146,12 @@ class _LoginPageState extends State<LoginPage> {
                                 color: theme.accentColor,
                                 decoration: TextDecoration.underline),
                             recognizer: new TapGestureRecognizer()
-                              ..onTap = () {},
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_context) => RegisterPage()));
+                              },
                           )))
                         ],
                       )))
