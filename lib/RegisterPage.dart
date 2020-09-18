@@ -1,4 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'extensions/HoverCursor.dart';
+
+import 'LoginPage.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key key}) : super(key: key);
@@ -24,7 +29,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return Scaffold(
         backgroundColor: theme.backgroundColor,
-        body: Stack(children: [
+        body: SingleChildScrollView(
+            child: Stack(children: [
           Container(
               width: double.infinity,
               height: 200,
@@ -43,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
               scale: 1.30,
             ),
             Container(
-                //width: width,
+                constraints: BoxConstraints(maxWidth: width * 3.3),
                 padding: EdgeInsets.all(25),
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -51,135 +57,159 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(5)),
                 child: Form(
                     key: formKey,
-                    child: Wrap(
-                      spacing: 20,
-                      runSpacing: 15,
-                      children: [
-                        Container(
-                          width: width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                keyboardType: TextInputType.name,
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.person),
-                                  labelText: "Nombre/s",
-                                ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: inputSeparation,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.name,
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.person_outlined),
-                                  labelText: "Apellido/s",
-                                ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: inputSeparation,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.datetime,
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.date_range),
-                                  labelText: "Fecha de Nacimiento",
-                                ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.alternate_email),
-                                  labelText: "Correo electrónico",
-                                ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: inputSeparation,
-                              ),
-                              TextFormField(
-                                obscureText: !isPasswordVisible1,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(isPasswordVisible1
-                                        ? Icons.visibility_off
-                                        : Icons.visibility),
-                                    onPressed: () {
-                                      setState(() {
-                                        isPasswordVisible1 =
-                                            !isPasswordVisible1;
-                                      });
-                                    },
+                    child: Column(children: [
+                      Wrap(
+                        spacing: 20,
+                        runSpacing: 15,
+                        children: [
+                          Container(
+                            width: width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  keyboardType: TextInputType.name,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.person),
+                                    labelText: "Nombre/s",
                                   ),
-                                  labelText: "Contraseña",
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
                                 ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: inputSeparation,
-                              ),
-                              TextFormField(
-                                obscureText: !isPasswordVisible2,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 8),
-                                  prefixIcon: Icon(Icons.lock_outlined),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(isPasswordVisible2
-                                        ? Icons.visibility_off_outlined
-                                        : Icons.visibility_outlined),
-                                    onPressed: () {
-                                      setState(() {
-                                        isPasswordVisible2 =
-                                            !isPasswordVisible2;
-                                      });
-                                    },
+                                SizedBox(
+                                  height: inputSeparation,
+                                ),
+                                TextFormField(
+                                  keyboardType: TextInputType.name,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.person_outlined),
+                                    labelText: "Apellido/s",
                                   ),
-                                  labelText: "Confirmar contraseña",
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
                                 ),
-                                //onSaved: (input) => _email = input,
-                                validator: (input) {
-                                  return null;
-                                },
-                              )
-                            ],
+                                SizedBox(
+                                  height: inputSeparation,
+                                ),
+                                TextFormField(
+                                  keyboardType: TextInputType.datetime,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.date_range),
+                                    labelText: "Fecha de Nacimiento",
+                                  ),
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
+                                )
+                              ],
+                            ),
                           ),
-                        )
-                      ],
-                    )))
+                          Container(
+                            width: width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.alternate_email),
+                                    labelText: "Correo electrónico",
+                                  ),
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(
+                                  height: inputSeparation,
+                                ),
+                                TextFormField(
+                                  obscureText: !isPasswordVisible1,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.lock),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(isPasswordVisible1
+                                          ? Icons.visibility_off
+                                          : Icons.visibility),
+                                      onPressed: () {
+                                        setState(() {
+                                          isPasswordVisible1 =
+                                              !isPasswordVisible1;
+                                        });
+                                      },
+                                    ),
+                                    labelText: "Contraseña",
+                                  ),
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(
+                                  height: inputSeparation,
+                                ),
+                                TextFormField(
+                                  obscureText: !isPasswordVisible2,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 8),
+                                    prefixIcon: Icon(Icons.lock_outlined),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(isPasswordVisible2
+                                          ? Icons.visibility_off_outlined
+                                          : Icons.visibility_outlined),
+                                      onPressed: () {
+                                        setState(() {
+                                          isPasswordVisible2 =
+                                              !isPasswordVisible2;
+                                        });
+                                      },
+                                    ),
+                                    labelText: "Confirmar contraseña",
+                                  ),
+                                  //onSaved: (input) => _email = input,
+                                  validator: (input) {
+                                    return null;
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: inputSeparation,
+                      ),
+                      Text(
+                        "¿Ya tienes una cuenta? ",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      HoverCursor(
+                          child: RichText(
+                              text: TextSpan(
+                        text: "Ingresa",
+                        style: TextStyle(
+                            color: theme.accentColor,
+                            decoration: TextDecoration.underline),
+                        recognizer: new TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_context) => LoginPage()));
+                          },
+                      )))
+                    ])))
           ]))
-        ]));
+        ])));
   }
 }
