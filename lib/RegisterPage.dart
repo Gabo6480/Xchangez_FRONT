@@ -2,7 +2,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'extensions/HoverCursor.dart';
 
 import 'LoginPage.dart';
 
@@ -22,11 +21,14 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final mQuery = MediaQuery.of(context);
+
     double width = mQuery.size.width < 300 ? mQuery.size.width : 300;
 
     ThemeData theme = Theme.of(context);
 
     const double inputSeparation = 15;
+
+    double maxWidth = width * 2 + inputSeparation * 5;
 
     return Scaffold(
         backgroundColor: theme.backgroundColor,
@@ -50,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
               scale: 1.30,
             ),
             Container(
-                constraints: BoxConstraints(maxWidth: width * 3.3),
+                constraints: BoxConstraints(maxWidth: maxWidth),
                 padding: EdgeInsets.all(25),
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -62,6 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Wrap(
                         spacing: 20,
                         runSpacing: 15,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Container(
                             width: width,
@@ -193,19 +196,80 @@ class _RegisterPageState extends State<RegisterPage> {
                                 )
                               ],
                             ),
-                          )
+                          ),
+                          Container(
+                            width: width,
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: RaisedButton(
+                                    highlightElevation: 0,
+                                    padding: EdgeInsets.symmetric(vertical: 17),
+                                    child: Text("Registrarme"),
+                                    onPressed: () {})),
+                          ),
+                          Container(
+                              width: width,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: RichText(
+                                  textAlign: TextAlign.justify,
+                                  text: TextSpan(
+                                      text:
+                                          "Al registrarme, declaro que acepto los ",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: "Términos y Condiciones",
+                                          style: TextStyle(
+                                              color: theme.accentColor,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (_context) =>
+                                                          LoginPage()));
+                                            },
+                                        ),
+                                        TextSpan(text: " y las "),
+                                        TextSpan(
+                                          text: "Politicas de Privacidad",
+                                          style: TextStyle(
+                                              color: theme.accentColor,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (_context) =>
+                                                          LoginPage()));
+                                            },
+                                        ),
+                                        TextSpan(text: " de Xchangez."),
+                                      ])))
                         ],
                       ),
                       SizedBox(
-                        height: inputSeparation,
-                      ),
+                          width:
+                              mQuery.size.width < maxWidth ? width : maxWidth,
+                          child: Divider(
+                            height: inputSeparation,
+                            color: Colors.black26,
+                            thickness: 1,
+                          )),
                       Text(
                         "¿Ya tienes una cuenta? ",
                         style: TextStyle(color: Colors.grey),
                       ),
-                      HoverCursor(
-                          child: RichText(
-                              text: TextSpan(
+                      RichText(
+                          text: TextSpan(
                         text: "Ingresar",
                         style: TextStyle(
                             color: theme.accentColor,
@@ -217,7 +281,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 MaterialPageRoute(
                                     builder: (_context) => LoginPage()));
                           },
-                      )))
+                      ))
                     ])))
           ]))
         ])));
