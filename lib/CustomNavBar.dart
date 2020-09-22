@@ -1,4 +1,6 @@
+import 'package:Xchangez/CustomSearchBar.dart';
 import 'package:Xchangez/extensions/NotificationBadge.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -72,8 +74,8 @@ class _CustomNavState extends State<CustomNavBar> {
           ? Container(
               margin: EdgeInsets.fromLTRB(
                   250, 0, isBigEnoughProfile ? 275 : 150, 0),
-              color: Colors.green,
               height: widget.preferredSize.height - widget.size,
+              child: CustomSearchBar(),
             )
           : SizedBox(),
       /*bottom: TabBar(tabs: [

@@ -33,6 +33,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  flappy_search_bar: ^1.7.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
