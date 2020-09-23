@@ -1,4 +1,4 @@
-name: xchangez
+name: Xchangez
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -32,6 +32,8 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
+
+  flappy_search_bar: ^1.7.2
 
 dev_dependencies:
   flutter_test:
