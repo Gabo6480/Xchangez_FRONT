@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'CustomNavBar.dart';
+import 'UserIconButton.dart';
 
 class CustomScaffold extends StatefulWidget {
   CustomScaffold(this.body, {Key key}) : super(key: key);
@@ -58,6 +59,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                     height: mQuery.size.height,
                     child: Container(
                       color: theme.backgroundColor,
+                      child: UserIconButton(),
                     ))
               ],
             )));

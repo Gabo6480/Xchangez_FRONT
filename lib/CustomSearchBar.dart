@@ -54,9 +54,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     shrinkWrap: true,
                     children: <Widget>[
                       ListTile(
-                        leading: Icon(Icons.history),
+                        leading: Icon(Icons.history_rounded),
                         trailing: InkWell(
-                          child: Icon(Icons.close),
+                          child: Icon(Icons.close_rounded),
                           onTap: () {},
                         ),
                         title: Text('Syria'),
@@ -77,6 +77,15 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             ));
   }
 
+  void _cancel() {
+    setState(() {
+      _searchQueryController.clear();
+      //_list.clear();
+      //_error = null;
+      //_loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,11 +101,14 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             focusNode: this._focusNode,
             controller: _searchQueryController,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: InkWell(
+                child: Icon(Icons.search_rounded),
+                onTap: () {},
+              ),
               suffixIcon: _focusNode.hasFocus
                   ? InkWell(
-                      child: Icon(Icons.close),
-                      onTap: () {},
+                      child: Icon(Icons.close_rounded),
+                      onTap: _cancel,
                     )
                   : SizedBox(),
               border: InputBorder.none,
