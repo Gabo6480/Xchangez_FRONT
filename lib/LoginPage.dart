@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:xchangez/RegisterPage.dart';
 import 'package:xchangez/SingleFormPage.dart';
-import 'extensions/HoverCursor.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -93,16 +93,15 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 5,
                 ),
-                HoverCursor(
-                    child: RichText(
-                        text: TextSpan(
+                RichText(
+                    text: TextSpan(
                   text: "¿Olvidaste tu contraseña?",
                   style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
                       decoration: TextDecoration.underline),
                   recognizer: new TapGestureRecognizer()..onTap = () {},
-                ))),
+                )),
                 Divider(
                   color: Colors.black26,
                   thickness: 1,
@@ -111,15 +110,18 @@ class _LoginPageState extends State<LoginPage> {
                   "¿No tienes una cuenta? ",
                   style: TextStyle(color: Colors.grey),
                 ),
-                HoverCursor(
-                    child: RichText(
-                        text: TextSpan(
+                RichText(
+                    text: TextSpan(
                   text: "Regístrate",
                   style: TextStyle(
                       color: theme.accentColor,
                       decoration: TextDecoration.underline),
-                  recognizer: new TapGestureRecognizer()..onTap = () {},
-                )))
+                  recognizer: new TapGestureRecognizer()
+                    ..onTap = () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_context) => RegisterPage())),
+                ))
               ],
             )));
   }

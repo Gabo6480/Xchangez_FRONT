@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SingleFormPage extends StatelessWidget {
-  SingleFormPage({Key key, this.child, this.width, this.height})
+  SingleFormPage(
+      {Key key, this.child, this.width, this.height, this.constraints})
       : super(key: key);
 
   final Widget child;
   final double width;
   final double height;
+  final BoxConstraints constraints;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class SingleFormPage extends StatelessWidget {
             Container(
                 width: width,
                 height: height,
+                constraints: constraints,
                 padding: EdgeInsets.all(25),
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
