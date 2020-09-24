@@ -1,7 +1,10 @@
+import 'package:Xchangez/LoginPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserIconButton extends StatelessWidget {
+  _goToLogin(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -12,10 +15,11 @@ class UserIconButton extends StatelessWidget {
             children: [
               Icon(Icons.circle, size: 50),
               SizedBox(width: 5),
-              Text("Nombre")
+              Text("Ingresar")
             ],
           )),
-      onTap: () {},
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (_context) => LoginPage())),
     );
   }
 }

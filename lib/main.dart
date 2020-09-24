@@ -1,6 +1,6 @@
+import 'package:Xchangez/LandingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'LoginPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           //home: MyHomePage(title: 'Flutter Demo Home Page'),
-          home: LoginPage(),
+          home: LandingPage(),
 
           localizationsDelegates: [
             // ... app-specific localization delegate[s] here
