@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
                 buttonColor: Color(0xffff7200),
                 textTheme: ButtonTextTheme.primary),
 
-            accentColor: Color(0xff008dff),
+            accentColor: Color(0xffff7200),
             accentTextTheme: TextTheme(
                 bodyText1: TextStyle(
               fontSize: 20,
