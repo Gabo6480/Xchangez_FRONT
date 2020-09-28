@@ -15,19 +15,23 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    double cardSize = 150;
-    double childAspectRatio = 0.5;
+    //print(MediaQuery.of(context).size.width);
+    double cardSize = 200;
+    double childAspectRatio = 0.7;
+    double crossAxisCount = MediaQuery.of(context).size.width * 0.9 / cardSize;
 
-    return CustomScaffold(GridView.builder(
-      itemCount: 200, //numero de elementos
-      scrollDirection: Axis.vertical, //Dirección de scroll
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: cardSize, childAspectRatio: childAspectRatio),
-      itemBuilder: (BuildContext context, int index) {
-        return CustomItemCard(
-          cardWidth: cardSize,
-        ); //Lista de elementos
-      },
-    ));
+    return CustomScaffold(Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.05),
+        child: GridView.builder(
+          itemCount: 200, //numero de elementos
+          scrollDirection: Axis.vertical, //Dirección de scroll
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount.truncate(),
+              childAspectRatio: childAspectRatio),
+          itemBuilder: (BuildContext context, int index) {
+            return CustomItemCard(); //Lista de elementos
+          },
+        )));
   }
 }
