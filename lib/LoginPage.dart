@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'CustomScaffold.dart';
+import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'RegisterPage.dart';
 
 class LoginPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:Xchangez/CustomSearchBar.dart';
+import 'CustomSearchBar.dart';
 import 'package:Xchangez/UserIconButton.dart';
 import 'package:Xchangez/extensions/NotificationBadge.dart';
 import 'package:Xchangez/extensions/SimpleIconButton.dart';
