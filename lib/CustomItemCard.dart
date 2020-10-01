@@ -74,7 +74,8 @@ class _CustomItemCardState extends State<CustomItemCard> {
                   "Tu corazón",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12, height: 2),
+                  style:
+                      TextStyle(fontSize: 12, height: 2, color: Colors.black54),
                 )),
           ]),
       onTap: () {},

@@ -1,9 +1,8 @@
-import 'dart:math';
-
-import 'package:Xchangez/CustomItemCard.dart';
+import 'package:Xchangez/CustomCarousel.dart';
+import 'package:Xchangez/CustomListView.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter/material.dart';
 
 class LandingPage extends StatefulWidget {
   LandingPage({Key key}) : super(key: key);
@@ -15,23 +14,25 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    //print(MediaQuery.of(context).size.width);
-    double cardSize = 200;
-    double childAspectRatio = 0.7;
-    double crossAxisCount = MediaQuery.of(context).size.width * 0.9 / cardSize;
+    double width = MediaQuery.of(context).size.width;
 
-    return CustomScaffold(Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.05),
-        child: GridView.builder(
-          itemCount: 200, //numero de elementos
-          scrollDirection: Axis.vertical, //Dirección de scroll
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount.truncate(),
-              childAspectRatio: childAspectRatio),
-          itemBuilder: (BuildContext context, int index) {
-            return CustomItemCard(); //Lista de elementos
-          },
-        )));
+    return CustomScaffold(ListView(children: [
+      CustomCarousel(),
+      Container(
+          color: Colors.white,
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: EdgeInsets.only(left: 15, top: 8),
+                  child: Text(
+                    "Popular",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  )),
+              CustomListView()
+            ],
+          )),
+    ]));
   }
 }
