@@ -6,7 +6,7 @@ class CustomGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double cardSize = width < 350 ? width * 0.9 / 2 : 175;
-    double childAspectRatio = 0.6;
+    double childAspectRatio = 0.58;
     double crossAxisCount = width * 0.9 / cardSize;
     return GridView.builder(
       itemCount: 200, //numero de elementos
