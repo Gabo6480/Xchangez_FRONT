@@ -2,7 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:xchangez/SingleFormPage.dart';
+import 'package:Xchangez/SingleFormPage.dart';
 
 import 'LoginPage.dart';
 
@@ -199,13 +199,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: theme.accentColor,
                                       decoration: TextDecoration.underline),
                                   recognizer: new TapGestureRecognizer()
-                                    ..onTap = () =>
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_context) =>
-                                                  LoginPage()))
-                                    ,
+                                    ..onTap = () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_context) =>
+                                                LoginPage())),
                                 ),
                                 TextSpan(text: " y las "),
                                 TextSpan(

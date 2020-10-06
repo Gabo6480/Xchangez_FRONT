@@ -47,8 +47,8 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           //home: MyHomePage(title: 'Flutter Demo Home Page'),
-          home: SearchPage(),
-          //home: LandingPage(),
+          //home: SearchPage(),
+          home: LandingPage(),
 
           localizationsDelegates: [
             // ... app-specific localization delegate[s] here

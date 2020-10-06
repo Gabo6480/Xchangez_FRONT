@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:xchangez/RegisterPage.dart';
-import 'package:xchangez/SingleFormPage.dart';
+import 'package:Xchangez/RegisterPage.dart';
+import 'package:Xchangez/SingleFormPage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
