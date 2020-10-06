@@ -1,7 +1,10 @@
+import 'package:Xchangez/model/UserInfo.dart';
+import 'package:Xchangez/model/api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'RegisterPage.dart';
+import 'model/UserToken.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -13,7 +16,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
 
-  String _email, _contrasena;
+  UserInfo usuario = UserInfo();
+  // String _email, _contrasena;
 
   bool _remember = false;
 
@@ -66,15 +70,12 @@ class _LoginPageState extends State<LoginPage> {
                               suffixIcon: Icon(Icons.alternate_email),
                               labelText: "Correo electrónico",
                             ),
-                            onSaved: (input) => _email = input,
+                            onSaved: (input) => usuario.Correo = input,
                             validator: (input) {
                               RegExp regex = new RegExp(
                                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                              if (!regex.hasMatch(input))
+                              if (!regex.hasMatch(input)) {
                                 return 'Ingrese un Correo Válido';
-                              else if (loginFail) {
-                                loginFail = false;
-                                return "Revise su correo o la contraseña";
                               }
                               return null;
                             },
@@ -88,8 +89,11 @@ class _LoginPageState extends State<LoginPage> {
                                 contentPadding: EdgeInsets.only(left: 8),
                                 suffixIcon: Icon(Icons.lock),
                                 labelText: "Contraseña"),
-                            onSaved: (input) => _contrasena = input,
+                            onSaved: (input) => usuario.Password = input,
                             validator: (input) {
+                              if (input.isEmpty) {
+                                return "Ingrese la contraseña";
+                              }
                               return null;
                             },
                           ),
@@ -102,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                                   highlightElevation: 0,
                                   padding: EdgeInsets.symmetric(vertical: 17),
                                   child: Text("Ingresar"),
-                                  onPressed: _summit)),
+                                  onPressed: () => _summit())),
                           SizedBox(
                             height: 5,
                           ),
@@ -112,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                               title: Text("Recuérdame"),
                               onChanged: (value) {
                                 setState(() {
-                                  _remember = value;
+                                  _remember = value ?? false;
                                 });
                               }),
                           SizedBox(
@@ -157,5 +161,23 @@ class _LoginPageState extends State<LoginPage> {
         ]));
   }
 
-  void _summit() async {}
+  void _summit() async {
+    if (!formKey.currentState.validate()) {
+      return;
+    }
+    formKey.currentState.save();
+    if (usuario == null) {
+      print("El usuario es nulo");
+      return;
+    }
+    Future<UserToken> token = APIServices.login(usuario);
+    token.then((value) {
+      if (value == null) {
+        print("No se ha coseguido obtener el token, verifique el usuario");
+      }
+      print("Token: " + value.Token);
+    }).catchError((error) {
+      print(error);
+    });
+  }
 }
