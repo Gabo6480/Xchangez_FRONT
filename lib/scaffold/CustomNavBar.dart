@@ -1,3 +1,5 @@
+import 'package:Xchangez/LandingPage.dart';
+
 import 'CustomSearchBar.dart';
 import 'package:Xchangez/UserIconButton.dart';
 import 'package:Xchangez/extensions/NotificationBadge.dart';
@@ -40,13 +42,16 @@ class _CustomNavState extends State<CustomNavBar> {
 
     return !isSearching || isBigEnoughSearch
         ? AppBar(
-            title: GestureDetector(
-                child: Image.asset(
-              mQuery.size.width > 400
-                  ? 'assets/images/Xchangez_no_background_OW.png'
-                  : 'assets/images/Xchangez_no_background_OW_mini.png',
-              scale: 3.1,
-            )),
+            title: InkWell(
+              child: Image.asset(
+                mQuery.size.width > 400
+                    ? 'assets/images/Xchangez_no_background_OW.png'
+                    : 'assets/images/Xchangez_no_background_OW_mini.png',
+                scale: 3.1,
+              ),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_context) => LandingPage())),
+            ),
             leading: IconButton(
                 icon: Icon(widget.isMenuOpen
                     ? Icons.menu_open_rounded
