@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserIconButton extends StatelessWidget {
+  _goToLogin(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
     return SimpleIconButton(
