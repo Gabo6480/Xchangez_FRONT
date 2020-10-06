@@ -54,10 +54,10 @@ class CustomExpansionTileState extends State<CustomExpansionTile> {
         child: ExpansionTile(
           key:
               GlobalKey(), //Al colocarle una llave vacía siempre que cambia el estado de CustomExpansionTile, el estado de ExpansionTile es limpiado causando que se cierre
-          title: Text(
-              widget.title +
-                  (isSelected ? (": " + widget.options[_selectedOption]) : ""),
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title:
+              Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
+          subtitle:
+              isSelected ? Text(widget.options[_selectedOption]) : SizedBox(),
           children: children,
         ));
   }
