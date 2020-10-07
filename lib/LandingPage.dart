@@ -16,8 +16,12 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
+    double carouselHeight = width > 800 ? width * 0.25 : 200;
+
     return CustomScaffold(ListView(children: [
-      CustomCarousel(),
+      CustomCarousel(
+        height: carouselHeight,
+      ),
       Container(
           color: Colors.white,
           margin: EdgeInsets.symmetric(vertical: 5),
