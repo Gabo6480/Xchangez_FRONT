@@ -1,5 +1,5 @@
 import 'package:Xchangez/LandingPage.dart';
-import 'package:Xchangez/SearchPage.dart';
+import 'package:Xchangez/ProductItemPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -46,9 +46,8 @@ class MyApp extends StatelessWidget {
             // closer together (more dense) than on mobile platforms.
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          //home: MyHomePage(title: 'Flutter Demo Home Page'),
-          //home: SearchPage(),
-          home: LandingPage(),
+          home: ProductItemPage(),
+          //home: LandingPage(),
 
           localizationsDelegates: [
             // ... app-specific localization delegate[s] here
