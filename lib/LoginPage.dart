@@ -3,6 +3,7 @@ import 'package:Xchangez/model/api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'RegisterPage.dart';
 import 'model/UserToken.dart';
 
@@ -16,12 +17,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
 
+  final RoundedLoadingButtonController _btnLogin =
+      new RoundedLoadingButtonController();
+
   UserInfo usuario = UserInfo();
-  // String _email, _contrasena;
-
   bool _remember = false;
-
-  bool loginFail;
+  bool loginFail = false;
+  String errorLogin = "test";
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +72,12 @@ class _LoginPageState extends State<LoginPage> {
                               suffixIcon: Icon(Icons.alternate_email),
                               labelText: "Correo electrónico",
                             ),
-                            onSaved: (input) => usuario.Correo = input,
+                            onSaved: (input) => usuario.correo = input,
                             validator: (input) {
                               RegExp regex = new RegExp(
                                   r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
                               if (!regex.hasMatch(input)) {
+                                _btnLogin.reset();
                                 return 'Ingrese un Correo Válido';
                               }
                               return null;
@@ -89,9 +92,10 @@ class _LoginPageState extends State<LoginPage> {
                                 contentPadding: EdgeInsets.only(left: 8),
                                 suffixIcon: Icon(Icons.lock),
                                 labelText: "Contraseña"),
-                            onSaved: (input) => usuario.Password = input,
+                            onSaved: (input) => usuario.password = input,
                             validator: (input) {
                               if (input.isEmpty) {
+                                _btnLogin.reset();
                                 return "Ingrese la contraseña";
                               }
                               return null;
@@ -101,15 +105,31 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           SizedBox(
-                              width: double.infinity,
-                              child: RaisedButton(
-                                  highlightElevation: 0,
-                                  padding: EdgeInsets.symmetric(vertical: 17),
-                                  child: Text("Ingresar"),
-                                  onPressed: () => _summit())),
-                          SizedBox(
-                            height: 5,
+                            width: double.infinity,
+                            child: RoundedLoadingButton(
+                              color: Color.fromRGBO(255, 120, 10, 1),
+                              child: Text("Ingresar",
+                                  style: TextStyle(color: Colors.white)),
+                              controller: _btnLogin,
+                              onPressed: _summit,
+                            ),
+                            // child: RaisedButton(
+                            //   highlightElevation: 0,
+                            //   padding: EdgeInsets.symmetric(vertical: 17),
+                            //   child: Text("Ingresar"),
+                            //   onPressed: () => _summit()
+                            // )
                           ),
+                          Visibility(
+                              child: Container(
+                                child: Center(
+                                    child: Text(
+                                  errorLogin,
+                                  style: TextStyle(color: Colors.redAccent),
+                                )),
+                                margin: EdgeInsets.only(top: 10),
+                              ),
+                              visible: loginFail),
                           CheckboxListTile(
                               value: _remember,
                               controlAffinity: ListTileControlAffinity.leading,
@@ -162,22 +182,34 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _summit() async {
+    setState(() {
+      loginFail = false;
+      errorLogin = '';
+    });
+
     if (!formKey.currentState.validate()) {
       return;
     }
+
     formKey.currentState.save();
-    if (usuario == null) {
-      print("El usuario es nulo");
-      return;
+
+    try {
+
+      UserToken userToken = await APIServices.login(usuario);
+      
+      setState(() {
+        _btnLogin.success();
+      });
+
+      print(userToken.token);
+
+    } catch (error) {
+
+      setState(() {
+        loginFail = true;
+        errorLogin = error;
+        _btnLogin.reset();
+      });
     }
-    Future<UserToken> token = APIServices.login(usuario);
-    token.then((value) {
-      if (value == null) {
-        print("No se ha coseguido obtener el token, verifique el usuario");
-      }
-      print("Token: " + value.Token);
-    }).catchError((error) {
-      print(error);
-    });
   }
 }

@@ -1,7 +1,10 @@
+import 'package:Xchangez/model/Usuario.dart';
+import 'package:Xchangez/model/api.services.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import 'LoginPage.dart';
 
@@ -17,6 +20,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isPasswordVisible1 = false;
   bool isPasswordVisible2 = false;
+  String confirmPassword = '';
+  bool isError = false;
+  String errorMessage = '';
+
+  final Usuario usuario = new Usuario();
+
+  final RoundedLoadingButtonController _btnRegister =
+      new RoundedLoadingButtonController();
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +89,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     prefixIcon: Icon(Icons.person),
                                     labelText: "Nombre/s",
                                   ),
-                                  //onSaved: (input) => _email = input,
+                                  onSaved: (input) => usuario.nombre = input,
                                   validator: (input) {
+                                    if (input.isEmpty) {
+                                      _btnRegister.reset();
+                                      return "Ingrese su(s) nombre(s)";
+                                    }
                                     return null;
                                   },
                                 ),
@@ -93,8 +108,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     prefixIcon: Icon(Icons.person_outlined),
                                     labelText: "Apellido/s",
                                   ),
-                                  //onSaved: (input) => _email = input,
+                                  onSaved: (input) => usuario.apellido = input,
                                   validator: (input) {
+                                    if (input.isEmpty) {
+                                      _btnRegister.reset();
+                                      return "Ingrese su(s) apellido(s)";
+                                    }
                                     return null;
                                   },
                                 ),
@@ -110,8 +129,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                       prefixIcon: Icon(Icons.date_range),
                                       labelText: "Fecha de nacimiento",
                                     ),
-                                    //onSaved: (input) => _email = input,
+                                    onSaved: (input) =>
+                                        usuario.fechaNacimiento = input,
                                     validator: (value) {
+                                      if (value == null) {
+                                        _btnRegister.reset();
+                                        return "Ingrese la fecha de su nacimiento";
+                                      }
                                       return null;
                                     },
                                     onShowPicker: (_context, _date) async {
@@ -137,8 +161,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                     prefixIcon: Icon(Icons.alternate_email),
                                     labelText: "Correo electrónico",
                                   ),
-                                  //onSaved: (input) => _email = input,
+                                  onSaved: (input) => usuario.correo = input,
                                   validator: (input) {
+                                    RegExp regex = new RegExp(
+                                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                                    if (!regex.hasMatch(input)) {
+                                      _btnRegister.reset();
+                                      return 'Ingrese un correo valido';
+                                    }
                                     return null;
                                   },
                                 ),
@@ -163,8 +193,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                     labelText: "Contraseña",
                                   ),
-                                  //onSaved: (input) => _email = input,
+                                  onSaved: (input) => usuario.password = input,
                                   validator: (input) {
+                                    if (input.isEmpty) {
+                                      _btnRegister.reset();
+                                      return "Ingrese la contraseña que usará para logearse";
+                                    }
                                     return null;
                                   },
                                 ),
@@ -189,8 +223,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                     labelText: "Confirmar contraseña",
                                   ),
-                                  //onSaved: (input) => _email = input,
+                                  onSaved: (input) => confirmPassword = input,
                                   validator: (input) {
+                                    if (input.isEmpty) {
+                                      _btnRegister.reset();
+                                      return "Confirme la contraseña";
+                                    }
                                     return null;
                                   },
                                 )
@@ -201,12 +239,21 @@ class _RegisterPageState extends State<RegisterPage> {
                             width: width,
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             child: SizedBox(
-                                width: double.infinity,
-                                child: RaisedButton(
-                                    highlightElevation: 0,
-                                    padding: EdgeInsets.symmetric(vertical: 17),
-                                    child: Text("Registrarme"),
-                                    onPressed: () {})),
+                              width: double.infinity,
+                              child: RoundedLoadingButton(
+                                color: Color.fromRGBO(255, 120, 10, 1),
+                                child: Text("Ingresar",
+                                    style: TextStyle(color: Colors.white)),
+                                controller: _btnRegister,
+                                onPressed: _summit,
+                              ),
+
+                              // RaisedButton(
+                              //     highlightElevation: 0,
+                              //     padding: EdgeInsets.symmetric(vertical: 17),
+                              //     child: Text("Registrarme"),
+                              //     onPressed: () {})
+                            ),
                           ),
                           Container(
                               width: width,
@@ -253,7 +300,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                             },
                                         ),
                                         TextSpan(text: " de Xchangez."),
-                                      ])))
+                                      ]))),
+                          Visibility(
+                              child: Container(
+                                child: Center(
+                                    child: Text(
+                                  errorMessage,
+                                  style: TextStyle(color: Colors.redAccent),
+                                )),
+                                margin: EdgeInsets.only(top: 10),
+                              ),
+                              visible: isError),
                         ],
                       ),
                       SizedBox(
@@ -285,5 +342,51 @@ class _RegisterPageState extends State<RegisterPage> {
                     ])))
           ]))
         ])));
+  }
+
+  void _summit() async {
+    showErrorMessage(message: '', show: false);
+
+    if (!formKey.currentState.validate()) {
+      return;
+    }
+
+    formKey.currentState.save();
+
+    if (!camposValidos()) return;
+
+    try {
+      Usuario usuarioRegistrado = await APIServices.register(usuario);
+
+      if (usuarioRegistrado == null) {
+        showErrorMessage(message: 'El usuario no se ha registrado por alguna razón',
+          resetButton: true);
+        return;
+      }
+
+      _btnRegister.success();
+    } catch (error) {
+      showErrorMessage(message: error.toString(),
+          resetButton: true);
+      return;
+    }
+  }
+
+  void showErrorMessage({String message = '', bool show = true, bool resetButton = false}) {
+    setState(() {
+      isError = show;
+      errorMessage = message;
+      if (resetButton)
+        _btnRegister.reset();
+    });
+  }
+
+  bool camposValidos() {
+    if (confirmPassword != usuario.password) {
+      showErrorMessage(message: 'Las contraseñas no coinciden', resetButton: true);
+      return false;
+    }
+
+    return true;
   }
 }

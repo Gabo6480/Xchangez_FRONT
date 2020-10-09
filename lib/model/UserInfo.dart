@@ -1,17 +1,16 @@
 class UserInfo {
-  String Correo;
-  String Password;
+  String correo;
+  String password;
 
-  UserInfo({this.Correo, this.Password});
+  UserInfo({this.correo, this.password});
 
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(Correo: json["correo"], Password: json["password"]);
-  }
+  factory UserInfo.fromJson(Map<String, dynamic> json) =>
+    UserInfo(correo: json["correo"], password: json["password"]);
 
   Map<String, dynamic> toJson() {
     return {
-      "Correo": this.Correo,
-      "Password": this.Password
+      "correo": this.correo,
+      "password": this.password
     };
   }
 

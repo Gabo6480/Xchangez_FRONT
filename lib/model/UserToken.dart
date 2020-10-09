@@ -1,10 +1,10 @@
 class UserToken {
-  String Token;
-  String Expiration;
+  String token;
+  String expiration;
 
-  UserToken({this.Token, this.Expiration});
+  UserToken({this.token, this.expiration});
 
   factory UserToken.fromJson(Map<String, dynamic> json) {
-    return UserToken(Token: json["token"], Expiration: json["expiration"]);
+    return UserToken(token: json["token"], expiration: json["expiration"]);
   }
 }
