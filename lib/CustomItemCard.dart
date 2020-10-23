@@ -1,3 +1,4 @@
+import 'package:Xchangez/ProductItemPage.dart';
 import 'package:flutter/material.dart';
 
 class CustomItemCard extends StatefulWidget {
@@ -78,7 +79,8 @@ class _CustomItemCardState extends State<CustomItemCard> {
                       TextStyle(fontSize: 12, height: 2, color: Colors.black54),
                 )),
           ]),
-      onTap: () {},
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (_context) => ProductItemPage())),
       onHover: (value) => setState(() {
         isHovered = value;
       }),

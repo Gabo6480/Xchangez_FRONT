@@ -45,7 +45,7 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
     ThemeData theme = Theme.of(context);
 
     return Container(
-        color: Colors.black,
+        //color: Colors.transparent,
         alignment: Alignment.center,
         child: AspectRatio(
             aspectRatio: _controller.value.aspectRatio,
@@ -73,7 +73,8 @@ class _VideoPlayerState extends State<VideoPlayerScreen> {
                     },
                     child:
                         Stack(alignment: Alignment.center, children: <Widget>[
-                      VideoPlayer(_controller),
+                      Container(
+                          color: Colors.black, child: VideoPlayer(_controller)),
                       Visibility(
                           visible: isBeingHovered,
                           child: AnimatedContainer(

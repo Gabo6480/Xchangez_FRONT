@@ -21,6 +21,8 @@ class _CustomCarouselState extends State<CustomCarousel> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
+    double iconSize = 50;
+
     List<Widget> _items;
 
     if (widget.items != null)
@@ -51,30 +53,38 @@ class _CustomCarouselState extends State<CustomCarousel> {
                 });
               }),
           items: _items),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          InkWell(
-            child: Icon(
-              Icons.arrow_left,
-              color: Colors.white,
-              size: 80,
-            ),
-            onTap: () => _controller.previousPage(),
-          ),
-          InkWell(
-              child: Icon(
-                Icons.arrow_right,
-                color: Colors.white,
-                size: 80,
-              ),
-              onTap: () => _controller.nextPage())
-        ],
-      ),
-      Container(
-        padding: EdgeInsets.all(8),
-        alignment: Alignment.bottomCenter,
-        height: widget.height,
+      _items.length > 1
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                      child: Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Colors.white,
+                        size: iconSize,
+                      ),
+                      onTap: () => _controller.previousPage(),
+                    )),
+                Container(
+                    decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: InkWell(
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                        onTap: () => _controller.nextPage()))
+              ],
+            )
+          : SizedBox(),
+      Positioned(
+        bottom: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: _items.map((e) {

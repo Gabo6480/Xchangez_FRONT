@@ -1,6 +1,10 @@
+import 'package:Xchangez/CommentTile.dart';
+import 'package:Xchangez/CustomCarousel.dart';
+import 'package:Xchangez/extensions/VideoPlayer.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class ProductItemPage extends StatefulWidget {
   ProductItemPage({Key key}) : super(key: key);
@@ -37,10 +41,13 @@ class _ProductItemState extends State<ProductItemPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
+    double carousel = min(600, width * .85);
+
     return CustomScaffold(ListView(children: [
       Container(
         width: double.infinity,
         margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15),
         //height: 100,
         decoration: BoxDecoration(
             color: Colors.white,
@@ -53,9 +60,24 @@ class _ProductItemState extends State<ProductItemPage> {
             ],
             borderRadius: BorderRadius.circular(20)),
         child: Wrap(
+          //crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.spaceAround,
           children: [
             Container(
-              width: 320,
+              width: carousel,
+              child: CustomCarousel(
+                height: carousel,
+                autoPlay: false,
+                items: [
+                  VideoPlayerScreen(
+                      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
+                  Image.network(
+                      'https://techcrunch.com/wp-content/uploads/2020/05/DSC00537.jpg?w=1390&crop=1'),
+                ],
+              ),
+            ),
+            Container(
+              width: carousel,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -68,6 +90,12 @@ class _ProductItemState extends State<ProductItemPage> {
                           style: TextStyle(fontSize: 12)),
                     ),
                     ListTile(title: Text("\$123123")),
+                    ListTile(
+                      title: Text("Dueño",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16)),
+                      subtitle: UserScoreCard(score: 3.4),
+                    ),
                     ExpansionTile(
                         title: Text("Características",
                             style: TextStyle(
@@ -78,7 +106,7 @@ class _ProductItemState extends State<ProductItemPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16)),
                       subtitle: Text(
-                          "TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
+                          "TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
                     ),
                   ]),
             )
@@ -88,6 +116,7 @@ class _ProductItemState extends State<ProductItemPage> {
       Container(
           width: double.infinity,
           margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(10),
           //height: 100,
           decoration: BoxDecoration(
               color: Colors.white,
@@ -99,7 +128,64 @@ class _ProductItemState extends State<ProductItemPage> {
                 )
               ],
               borderRadius: BorderRadius.circular(20)),
-          child: Text("Comentarios"))
+          child: Column(
+            children: [
+              ResponseTextFiled(),
+              Divider(
+                color: Colors.black26,
+                thickness: 1,
+              ),
+              CommentTile(),
+              CommentTile()
+            ],
+          ))
     ]));
+  }
+}
+
+class UserScoreCard extends StatelessWidget {
+  UserScoreCard({Key key, this.score}) : super(key: key);
+
+  final double score;
+  final List<Widget> stars = List();
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
+    double _score = score;
+    for (int i = 0; i < 5; i++) {
+      stars.add(Icon(
+        _score >= 1.0
+            ? Icons.star
+            : (_score >= 0.25 ? Icons.star_half : Icons.star_outline),
+        color: theme.accentColor,
+      ));
+      _score -= 1.0;
+    }
+
+    return ListTile(
+      leading: Icon(Icons.circle, size: 50),
+      title: Text("Vendedor Ofertón",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      subtitle: Row(
+        children: stars +
+            [
+              SizedBox(
+                width: 8,
+              ),
+              Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: theme.primaryColor,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Text(
+                    score.toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ))
+            ],
+      ),
+    );
   }
 }
