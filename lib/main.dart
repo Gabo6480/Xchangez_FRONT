@@ -1,3 +1,4 @@
+import 'package:Xchangez/ChatPage.dart';
 import 'package:Xchangez/LandingPage.dart';
 import 'package:Xchangez/ProductItemPage.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +47,8 @@ class MyApp extends StatelessWidget {
             // closer together (more dense) than on mobile platforms.
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          //home: ProductItemPage(),
-          home: LandingPage(),
+          home: ChatPage(),
+          //home: LandingPage(),
 
           localizationsDelegates: [
             // ... app-specific localization delegate[s] here
