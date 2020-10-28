@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,6 +16,9 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+
+  Uint8List _profile;
+  Uint8List _background;
 
   @override
   void initState() {
@@ -46,45 +51,77 @@ class _UserPageState extends State<UserPage>
             BoxShadow(color: Colors.black26, spreadRadius: 3, blurRadius: 5)
           ]),
           child: Column(children: [
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: double.infinity,
-              height: 200 + padding,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black26, spreadRadius: 3, blurRadius: 5)
-                  ],
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: NetworkImage(
-                          "https://media.vandal.net/i/1000x562/26509/grand-theft-auto-san-andreas-2014102794311_1.jpg"))),
-              child: Container(
-                alignment: Alignment.bottomRight,
-                width: imageSize,
-                height: imageSize,
-                transform: Matrix4.translationValues(0, 25, 0),
+            Stack(children: [
+              Container(
+                alignment: Alignment.bottomCenter,
+                width: double.infinity,
+                height: 200 + padding,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 6),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25)),
                     boxShadow: [
                       BoxShadow(
                           color: Colors.black26, spreadRadius: 3, blurRadius: 5)
                     ],
                     image: DecorationImage(
                         fit: BoxFit.fill,
-                        image:
-                            NetworkImage("https://i.imgur.com/BoN9kdC.png"))),
+                        image: _background == null
+                            ? NetworkImage(
+                                "https://media.vandal.net/i/1000x562/26509/grand-theft-auto-san-andreas-2014102794311_1.jpg")
+                            : MemoryImage(_background))),
                 child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                    child: IconButton(
-                        icon: Icon(Icons.camera_alt), onPressed: () {})),
+                  alignment: Alignment.bottomRight,
+                  width: imageSize,
+                  height: imageSize,
+                  transform: Matrix4.translationValues(0, 25, 0),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 6),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 3,
+                            blurRadius: 5)
+                      ],
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: _profile == null
+                              ? NetworkImage("https://i.imgur.com/BoN9kdC.png")
+                              : MemoryImage(_profile))),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                      child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: () async {
+                            FilePickerResult result = await FilePicker.platform
+                                .pickFiles(type: FileType.image);
+                            if (result != null)
+                              setState(() {
+                                _profile = result.files.single.bytes;
+                              });
+                          })),
+                ),
               ),
-            ),
+              Positioned(
+                  right: 8,
+                  bottom: 8,
+                  child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white60),
+                      child: IconButton(
+                          color: Colors.black87,
+                          icon: Icon(Icons.image),
+                          onPressed: () async {
+                            FilePickerResult result = await FilePicker.platform
+                                .pickFiles(type: FileType.image);
+                            if (result != null)
+                              setState(() {
+                                _background = result.files.single.bytes;
+                              });
+                          })))
+            ]),
             SizedBox(
               height: 20,
             ),
@@ -99,21 +136,23 @@ class _UserPageState extends State<UserPage>
               color: Colors.black26,
               thickness: 1,
             ),
-            TabBar(
-              controller: _tabController,
-              labelColor: theme.primaryColor,
-              indicatorColor: theme.primaryColor,
-              unselectedLabelColor: Colors.black,
-              tabs: [
-                Tab(text: 'Publicaciónes'),
-                Tab(text: 'Gustos'),
-                Tab(text: 'Información')
-              ],
-            ),
+            Container(
+                width: 800,
+                child: TabBar(
+                  controller: _tabController,
+                  labelColor: theme.primaryColor,
+                  indicatorColor: theme.primaryColor,
+                  unselectedLabelColor: Colors.black,
+                  tabs: [
+                    Tab(text: 'Publicaciónes'),
+                    Tab(text: 'Gustos'),
+                    Tab(text: 'Información')
+                  ],
+                )),
           ])),
       Container(
           height: height * .9,
-          child: TabBarView(controller: _tabController, children: <Widget>[
+          child: TabBarView(controller: _tabController, children: [
             Container(
               alignment: Alignment.center,
               child: Text('Display Tab 1',
