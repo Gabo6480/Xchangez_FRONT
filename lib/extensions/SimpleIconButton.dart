@@ -16,7 +16,7 @@ class SimpleIconButton extends StatelessWidget {
     return InkWell(
       borderRadius: borderRadius,
       child: Padding(
-          padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
+          padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
           child: Row(
             children: [icon, SizedBox(width: 5), child],
           )),

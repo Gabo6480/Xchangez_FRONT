@@ -1,5 +1,7 @@
 import 'package:Xchangez/CommentTile.dart';
 import 'package:Xchangez/CustomCarousel.dart';
+import 'package:Xchangez/extensions/CircleImage.dart';
+import 'package:Xchangez/extensions/HoverText.dart';
 import 'package:Xchangez/extensions/VideoPlayer.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -165,9 +167,12 @@ class UserScoreCard extends StatelessWidget {
     }
 
     return ListTile(
-      leading: Icon(Icons.circle, size: 50),
-      title: Text("Vendedor Ofertón",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      leading: CircleImage(
+        image: NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+      ),
+      title: HoverText("Vendedor Ofertón",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          onTap: () {}),
       subtitle: Row(
         children: stars +
             [
