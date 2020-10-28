@@ -1,3 +1,5 @@
+import 'package:Xchangez/extensions/CircleImage.dart';
+import 'package:Xchangez/extensions/HoverText.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +17,17 @@ class _CommentTileState extends State<CommentTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.circle, size: 50),
-      title: Text("Usuario Usañez",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      leading: CircleImage(
+        image: NetworkImage(
+            "https://caricom.org/wp-content/uploads/Floyd-Morris-Remake-1024x879-1-640x549.jpg"),
+      ),
+      title: Row(children: [
+        HoverText("Usuario Usañez",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            onTap: () {}),
+        Text("  -  " + "5 días",
+            style: TextStyle(fontSize: 12, color: Colors.grey))
+      ]),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -80,9 +90,17 @@ class ResponseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.circle, size: 50),
-      title: Text("Respondiño Respondón",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      leading: CircleImage(
+        image: NetworkImage(
+            "https://images.pulseheadlines.com/wp-content/uploads/2016/07/Graham-1.jpg"),
+      ),
+      title: Row(children: [
+        HoverText("Respondiño Respondón",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            onTap: () {}),
+        Text("  -  " + "2 días",
+            style: TextStyle(fontSize: 12, color: Colors.grey))
+      ]),
       subtitle: Text("Respuesta responsiva directa"),
     );
   }
@@ -92,7 +110,9 @@ class ResponseTextFiled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.circle, size: 50),
+      leading: CircleImage(
+        image: NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+      ),
       title: TextField(
         maxLines:
             null, // Este null es requerido para la funcionalidad de expanción en overflow
