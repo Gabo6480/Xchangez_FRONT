@@ -23,7 +23,7 @@ class _UserPageState extends State<UserPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -65,7 +65,7 @@ class _UserPageState extends State<UserPage>
                           color: Colors.black26, spreadRadius: 3, blurRadius: 5)
                     ],
                     image: DecorationImage(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: _background == null
                             ? NetworkImage(
                                 "https://media.vandal.net/i/1000x562/26509/grand-theft-auto-san-andreas-2014102794311_1.jpg")
@@ -85,7 +85,7 @@ class _UserPageState extends State<UserPage>
                             blurRadius: 5)
                       ],
                       image: DecorationImage(
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           image: _profile == null
                               ? NetworkImage("https://i.imgur.com/BoN9kdC.png")
                               : MemoryImage(_profile))),
@@ -129,7 +129,7 @@ class _UserPageState extends State<UserPage>
               "Carl Johnson",
               style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
-            UserScore(
+            _UserScore(
               score: 3.4,
             ),
             Divider(
@@ -143,15 +143,11 @@ class _UserPageState extends State<UserPage>
                   labelColor: theme.primaryColor,
                   indicatorColor: theme.primaryColor,
                   unselectedLabelColor: Colors.black,
-                  tabs: [
-                    Tab(text: 'Publicaciónes'),
-                    Tab(text: 'Gustos'),
-                    Tab(text: 'Información')
-                  ],
+                  tabs: [Tab(text: 'Publicaciónes'), Tab(text: 'Gustos')],
                 )),
           ])),
       Container(
-          height: height * .9,
+          height: height - 153,
           child: TabBarView(controller: _tabController, children: [
             Container(
               alignment: Alignment.center,
@@ -159,22 +155,22 @@ class _UserPageState extends State<UserPage>
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             ),
             Container(
-              alignment: Alignment.center,
-              child: Text('Display Tab 2',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: Text('Display Tab 3',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            )
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(10),
+                child: ListView(
+                  children: [
+                    _CustomList(),
+                    _CustomList(),
+                    _CustomList(),
+                  ],
+                ))
           ]))
     ]));
   }
 }
 
-class UserScore extends StatelessWidget {
-  UserScore({Key key, this.score}) : super(key: key);
+class _UserScore extends StatelessWidget {
+  _UserScore({Key key, this.score}) : super(key: key);
 
   final double score;
   final List<Widget> stars = List();
@@ -212,6 +208,72 @@ class UserScore extends StatelessWidget {
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ))
           ],
+    );
+  }
+}
+
+class _CustomListTile extends StatelessWidget {
+  _CustomListTile({Key key, this.has = true}) : super(key: key);
+
+  final bool has;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text("Nombre"),
+      subtitle: Text(
+          "DESCRIPCIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNN TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
+      trailing: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+            color: has ? Colors.lightGreen : Colors.lightBlue,
+            borderRadius: BorderRadius.circular(8)),
+        child: Text(
+          has ? "Tengo" : "Busco",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black26,
+              offset: Offset(0, 2),
+              spreadRadius: 1,
+              blurRadius: 2)
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            "Titulo de la lista",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          Text(
+              "DESCRIPCIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNN: TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"),
+          Divider(
+            color: Colors.black26,
+            thickness: 1,
+          ),
+          _CustomListTile(has: true),
+          _CustomListTile(has: false),
+          _CustomListTile(has: false),
+          _CustomListTile(has: true),
+        ],
+      ),
     );
   }
 }
