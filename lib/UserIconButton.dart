@@ -1,21 +1,23 @@
+import 'package:Xchangez/LoginPage.dart';
+import 'package:Xchangez/extensions/CircleImage.dart';
+import 'package:Xchangez/extensions/SimpleIconButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserIconButton extends StatelessWidget {
+  _goToLogin(BuildContext context) {}
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(50),
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(5, 0, 20, 0),
-          child: Row(
-            children: [
-              Icon(Icons.circle, size: 50),
-              SizedBox(width: 5),
-              Text("Nombre")
-            ],
-          )),
-      onTap: () {},
+    return SimpleIconButton(
+      borderRadius: BorderRadius.circular(40),
+      icon: CircleImage(
+        size: 40,
+        image: NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+      ),
+      child: Text("Nombre"),
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (_context) => LoginPage())),
     );
   }
 }

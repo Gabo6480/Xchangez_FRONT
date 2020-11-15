@@ -1,6 +1,8 @@
+import 'package:Xchangez/LandingPage.dart';
+import 'package:Xchangez/ProductItemPage.dart';
+import 'package:Xchangez/UserPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'LoginPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
                 buttonColor: Color(0xffff7200),
                 textTheme: ButtonTextTheme.primary),
 
-            accentColor: Color(0xff008dff),
+            accentColor: Color(0xffff7200),
             accentTextTheme: TextTheme(
                 bodyText1: TextStyle(
               fontSize: 20,
@@ -45,8 +47,8 @@ class MyApp extends StatelessWidget {
             // closer together (more dense) than on mobile platforms.
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          //home: MyHomePage(title: 'Flutter Demo Home Page'),
-          home: LoginPage(),
+          //home: UserPage(),
+          home: LandingPage(),
 
           localizationsDelegates: [
             // ... app-specific localization delegate[s] here

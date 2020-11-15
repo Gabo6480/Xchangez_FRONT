@@ -1,3 +1,4 @@
+import 'package:Xchangez/SearchPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject();
     var size = renderBox.size;
-
     return OverlayEntry(
         builder: (context) => Positioned(
               width: size.width,
@@ -86,6 +86,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     });
   }
 
+  void _search(BuildContext context, String search) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_context) => SearchPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -103,7 +108,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             decoration: InputDecoration(
               prefixIcon: InkWell(
                 child: Icon(Icons.search_rounded),
-                onTap: () {},
+                onTap: () {
+                  if (_searchQueryController.text.isNotEmpty)
+                    _search(context, _searchQueryController.text);
+                },
               ),
               suffixIcon: _focusNode.hasFocus
                   ? InkWell(
@@ -114,6 +122,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               border: InputBorder.none,
               hintText: "Buscar...",
             ),
+            onSubmitted: (string) {
+              _search(context, string);
+            },
           ),
         ));
   }
