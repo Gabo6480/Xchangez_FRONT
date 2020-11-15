@@ -1,5 +1,5 @@
 import 'package:Xchangez/model/UserInfo.dart';
-import 'package:Xchangez/model/api.services.dart';
+import 'package:Xchangez/services/api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
