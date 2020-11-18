@@ -1,4 +1,6 @@
 import 'package:Xchangez/LandingPage.dart';
+import 'package:Xchangez/model/Usuario.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CustomSearchBar.dart';
 import 'package:Xchangez/UserIconButton.dart';
@@ -6,6 +8,7 @@ import 'package:Xchangez/extensions/NotificationBadge.dart';
 import 'package:Xchangez/extensions/SimpleIconButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:Xchangez/services/api.services.dart';
 
 class CustomNavBar extends StatefulWidget with PreferredSizeWidget {
   CustomNavBar(this.isMenuOpen, this.onClick, {Key key, this.size = 50})
@@ -26,6 +29,7 @@ class CustomNavBar extends StatefulWidget with PreferredSizeWidget {
 
 class _CustomNavState extends State<CustomNavBar> {
   bool isSearching = false;
+  String _nombreUsuario = "";
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,8 @@ class _CustomNavState extends State<CustomNavBar> {
     bool isBigEnoughSearch = mQuery.size.width > 650;
 
     ThemeData theme = Theme.of(context);
+
+    _getAuthUserName();
 
     if (isBigEnoughSearch && isSearching)
       setState(() {
@@ -66,7 +72,11 @@ class _CustomNavState extends State<CustomNavBar> {
                             isSearching = true;
                           }))
                   : SizedBox(),
-              isBigEnoughProfile ? UserIconButton() : SizedBox(),
+              isBigEnoughProfile
+                  ? UserIconButton(
+                      nombreUsuario: _nombreUsuario,
+                    )
+                  : SizedBox(),
               IconButton(
                   icon: NotificationBadge(
                       child: Icon(Icons.notifications_rounded),
@@ -76,7 +86,7 @@ class _CustomNavState extends State<CustomNavBar> {
                   icon: NotificationBadge(
                       child: Icon(Icons.chat_bubble), notifications: 0),
                   onPressed: () {}),
-              IconButton(icon: Icon(Icons.more_vert_rounded), onPressed: () {})
+              IconButton(icon: Icon(Icons.more_vert_rounded), onPressed: logout)
             ],
             flexibleSpace: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,5 +141,21 @@ class _CustomNavState extends State<CustomNavBar> {
             )
           ],
         ));
+  }
+
+  void _getAuthUserName() async {
+    Usuario authUser = await APIServices.getAuthUser();
+    setState(() {
+      _nombreUsuario = authUser != null 
+                          ? authUser.nombre ?? "Usuario Logeado"
+                          : "Iniciar Sesión";
+    });
+  }
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_context) => LandingPage()));
   }
 }
