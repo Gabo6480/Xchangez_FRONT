@@ -14,7 +14,7 @@ class APIServices {
   static final String tokenStorageKeyName = "jwt";
 
   // url de la api para hacer las consultas
-  static final String _urlHost = "https://localhost:44386/api/";
+  static final String _urlHost = "https://xchangezapi.azurewebsites.net/api/";
 
   // url del endpoint de la api para logearse
   static final String _urlAuthLogin = "Auth/Login";
