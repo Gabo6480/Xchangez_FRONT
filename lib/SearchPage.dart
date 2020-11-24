@@ -176,7 +176,7 @@ class _FilterListState extends State<FilterList> {
                 CustomExpansionTile(
                   key: _orderByKey,
                   title: "Ordenar por",
-                  options: ["Más relevantes", "Más relevantes", "Menor precio"],
+                  options: ["Más relevantes", "Mayor precio", "Menor precio"],
                   onChange: (v) => setState(() {
                     _orderBy = v;
                   }),

@@ -8,11 +8,11 @@ import 'package:Xchangez/extensions/NotificationBadge.dart';
 import 'package:Xchangez/extensions/SimpleIconButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Xchangez/services/api.services.dart';
 
 class CustomNavBar extends StatefulWidget with PreferredSizeWidget {
-  CustomNavBar(this.isMenuOpen, this.onClick, {Key key, this.size = 50})
-      : preferredSize = Size.fromHeight(size + 40 + 10),
+  CustomNavBar(this.isMenuOpen, this.onClick,
+      {Key key, this.size = 50, this.authUser})
+      : preferredSize = Size.fromHeight(size + 10),
         super(key: key);
 
   @override
@@ -23,13 +23,65 @@ class CustomNavBar extends StatefulWidget with PreferredSizeWidget {
 
   final double size;
 
+  final Usuario authUser;
+
   @override
   State<StatefulWidget> createState() => _CustomNavState();
 }
 
 class _CustomNavState extends State<CustomNavBar> {
   bool isSearching = false;
-  String _nombreUsuario = "";
+
+  OverlayEntry _overlayEntry;
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject();
+    var size = renderBox.size;
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: 400,
+        height: 400,
+        right: 100,
+        top: widget.size,
+        child: Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          elevation: 4.0,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.history_rounded),
+                trailing: InkWell(
+                  child: Icon(Icons.close_rounded),
+                  onTap: () {},
+                ),
+                title: Text('Syria'),
+                onTap: () {
+                  print('Syria Tapped');
+                },
+              ),
+              ListTile(
+                title: Text('Lebanon'),
+                onTap: () {
+                  print('Lebanon Tapped');
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showMenu() {
+    setState(() {
+      this._overlayEntry = this._createOverlayEntry();
+      Overlay.of(context).insert(this._overlayEntry);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +91,6 @@ class _CustomNavState extends State<CustomNavBar> {
     bool isBigEnoughSearch = mQuery.size.width > 650;
 
     ThemeData theme = Theme.of(context);
-
-    _getAuthUserName();
 
     if (isBigEnoughSearch && isSearching)
       setState(() {
@@ -74,82 +124,39 @@ class _CustomNavState extends State<CustomNavBar> {
                   : SizedBox(),
               isBigEnoughProfile
                   ? UserIconButton(
-                      nombreUsuario: _nombreUsuario,
+                      authUser: widget.authUser,
                     )
                   : SizedBox(),
               IconButton(
                   icon: NotificationBadge(
                       child: Icon(Icons.notifications_rounded),
                       notifications: 0),
-                  onPressed: () {}),
+                  onPressed: _showMenu),
               IconButton(
                   icon: NotificationBadge(
                       child: Icon(Icons.chat_bubble), notifications: 0),
                   onPressed: () {}),
               IconButton(icon: Icon(Icons.more_vert_rounded), onPressed: logout)
             ],
-            flexibleSpace: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  isBigEnoughSearch
-                      ? Container(
-                          margin: EdgeInsets.fromLTRB(
-                              250, 0, isBigEnoughProfile ? 275 : 140, 0),
-                          height: widget.preferredSize.height - 40,
-                          child: CustomSearchBar(),
-                        )
-                      : SizedBox(),
-                  underButtons(theme.accentColor)
-                ]))
+            flexibleSpace: isBigEnoughSearch
+                ? Container(
+                    margin: EdgeInsets.fromLTRB(
+                        250, 0, isBigEnoughProfile ? 275 : 140, 0),
+                    height: widget.preferredSize.height,
+                    child: CustomSearchBar(),
+                  )
+                : SizedBox())
         : AppBar(
             leading: IconButton(
                 icon: Icon(Icons.arrow_back_rounded),
                 onPressed: () => setState(() {
                       isSearching = false;
                     })),
-            flexibleSpace: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: EdgeInsets.fromLTRB(65, 0, 10, 0),
-                    height: widget.preferredSize.height - 40,
-                    child: CustomSearchBar(),
-                  ),
-                  underButtons(theme.accentColor)
-                ]));
-  }
-
-  Widget underButtons(Color color) {
-    return Container(
-        height: 40,
-        color: Colors.black12,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: [
-            SimpleIconButton(
-              borderRadius: BorderRadius.circular(8),
-              icon: Icon(
-                Icons.place_rounded,
-                color: color,
-              ),
-              child: Text(
-                "Ubicación",
-                style: TextStyle(
-                    color: color, fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              onTap: () {},
-            )
-          ],
-        ));
-  }
-
-  void _getAuthUserName() async {
-    Usuario authUser = await APIServices.getAuthUser();
-    setState(() {
-      _nombreUsuario = authUser != null 
-                          ? authUser.nombre ?? "Usuario Logeado"
-                          : "Iniciar Sesión";
-    });
+            flexibleSpace: Container(
+              margin: EdgeInsets.fromLTRB(65, 0, 10, 0),
+              height: widget.preferredSize.height,
+              child: CustomSearchBar(),
+            ));
   }
 
   void logout() async {

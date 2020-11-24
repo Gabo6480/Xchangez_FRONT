@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:file_picker/src/platform_file.dart';
 import 'package:Xchangez/model/UserInfo.dart';
 import 'package:Xchangez/model/UserToken.dart';
 import 'package:Xchangez/model/Usuario.dart';
@@ -21,6 +22,9 @@ class APIServices {
 
   // url del endpoint de la api para crear un usuario
   static final String _urlAuthCreate = "Auth/Create";
+
+  // url del endpoint de la api para subir las imagenes de los perfiles
+  static final String _urlAuthUpdateAvatarImage = "Auth/UpdateAvatarImage";
 
   // url del endpoint de la api para obtener un usuario por Id
   static final String _urlAuthGetUsuario = "Auth/";
@@ -72,6 +76,30 @@ class APIServices {
     }
   }
 
+  // metodo para actualizar una imagen del perfil
+  static Future<bool> updateAvatar(PlatformFile imagen, int tipoImagen) async {
+    // creamos la url (https://localhost:44386/api/Auth/UpdateAvatarImage)
+    String endpointUrl = getEndPoint(_urlAuthUpdateAvatarImage);
+    Map<String, String> headers = await getHeadersMultiPart(true);
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse(endpointUrl),
+    )
+      ..headers.addAll(headers)
+      ..fields['tipoImagen'] = tipoImagen.toString()
+      ..files.add(http.MultipartFile.fromBytes('imagen', imagen.bytes,
+          filename: imagen.name));
+
+    var response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return true;
+    } else {
+      throw response.body;
+    }
+  }
+
   static Future<Map<String, String>> getHeaders(bool withAuthorization) async {
     if (withAuthorization) {
       // construimos el token con la palabra bearer
@@ -82,6 +110,20 @@ class APIServices {
       };
     } else {
       return {'Content-Type': 'application/json; charset=UTF-8'};
+    }
+  }
+
+  static Future<Map<String, String>> getHeadersMultiPart(
+      bool withAuthorization) async {
+    if (withAuthorization) {
+      // construimos el token con la palabra bearer
+      String bearerToken = "Bearer " + await _getTokenFromStorage();
+      return {
+        'Content-Type': 'multipart/form-data',
+        "Authorization": bearerToken,
+      };
+    } else {
+      return {'Content-Type': 'multipart/form-data'};
     }
   }
 

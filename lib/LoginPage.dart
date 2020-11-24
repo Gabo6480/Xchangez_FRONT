@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Xchangez/LandingPage.dart';
 import 'package:Xchangez/model/Publicacion.dart';
 import 'package:Xchangez/model/UserInfo.dart';
@@ -11,6 +13,8 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'RegisterPage.dart';
 import 'model/UserToken.dart';
+
+import './extensions/HoverText.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -117,12 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _btnLogin,
                               onPressed: _summit,
                             ),
-                            // child: RaisedButton(
-                            //   highlightElevation: 0,
-                            //   padding: EdgeInsets.symmetric(vertical: 17),
-                            //   child: Text("Ingresar"),
-                            //   onPressed: () => _summit()
-                            // )
                           ),
                           Visibility(
                               child: Container(
@@ -146,16 +144,12 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: 5,
                           ),
-                          RichText(
-                              text: TextSpan(
-                            text: "¿Olvidaste tu contraseña?",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 13,
-                                decoration: TextDecoration.underline),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {},
-                          )),
+                          HoverText("¿Olvidaste tu contraseña?",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                  decoration: TextDecoration.underline),
+                              onTap: () {}),
                           Divider(
                             color: Colors.black26,
                             thickness: 1,
@@ -164,20 +158,16 @@ class _LoginPageState extends State<LoginPage> {
                             "¿No tienes una cuenta? ",
                             style: TextStyle(color: Colors.grey),
                           ),
-                          RichText(
-                              text: TextSpan(
-                            text: "Regístrate",
-                            style: TextStyle(
-                                color: theme.accentColor,
-                                decoration: TextDecoration.underline),
-                            recognizer: new TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_context) => RegisterPage()));
-                              },
-                          ))
+                          HoverText("Regístrate",
+                              style: TextStyle(
+                                  color: theme.accentColor,
+                                  decoration: TextDecoration.underline),
+                              onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_context) => RegisterPage()));
+                          })
                         ],
                       )))
             ],
@@ -223,8 +213,11 @@ class _LoginPageState extends State<LoginPage> {
       */
 
       // redireccionamos al landing page
-      Navigator.push(
-          context, MaterialPageRoute(builder: (_context) => LandingPage()));
+
+      Timer(Duration(milliseconds: 250), () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_context) => LandingPage()));
+      });
     } catch (error) {
       setState(() {
         loginFail = true;

@@ -1,3 +1,5 @@
+import 'package:Xchangez/model/Usuario.dart';
+import 'package:Xchangez/services/api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,18 @@ class CustomScaffold extends StatefulWidget {
 class _CustomScaffoldState extends State<CustomScaffold> {
   bool isMenuOpen = false;
 
+  Usuario authUser;
+  void _getAuthUserName() async {
+    authUser = await APIServices.getAuthUser();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getAuthUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -30,7 +44,8 @@ class _CustomScaffoldState extends State<CustomScaffold> {
             isMenuOpen,
             () => setState(() {
                   isMenuOpen = !isMenuOpen;
-                })),
+                }),
+            authUser: authUser),
         body: Stack(
           children: [
             widget.body,
@@ -57,7 +72,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                 height: mQuery.size.height,
                 child: Container(
                   color: theme.backgroundColor,
-                  child: UserIconButton(),
+                  child: UserIconButton(authUser: authUser),
                 ))
           ],
         ));

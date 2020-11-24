@@ -18,7 +18,10 @@ class _HoverTextState extends State<HoverText> {
   @override
   Widget build(BuildContext context) {
     TextStyle _style = widget.style.copyWith(
-        decoration: isHovered ? TextDecoration.underline : TextDecoration.none);
+        decoration:
+            (isHovered || widget.style.decoration == TextDecoration.underline)
+                ? TextDecoration.underline
+                : TextDecoration.none);
 
     return InkWell(
       child: Text(
