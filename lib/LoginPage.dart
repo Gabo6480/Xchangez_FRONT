@@ -1,16 +1,11 @@
 import 'dart:async';
 
 import 'package:Xchangez/LandingPage.dart';
-import 'package:Xchangez/model/Publicacion.dart';
 import 'package:Xchangez/model/UserInfo.dart';
-import 'package:Xchangez/model/Usuario.dart';
-import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'RegisterPage.dart';
 import 'model/UserToken.dart';
 
@@ -191,9 +186,6 @@ class _LoginPageState extends State<LoginPage> {
       });
       // imprimimos el token en consola para testear
       print(userToken.token);
-      // guardamos el token en el storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString(APIServices.tokenStorageKeyName, userToken.token);
 
       // test de crear publi (no se le manda el usuario id porque desde la api lo obtiene en base al token)
       /*

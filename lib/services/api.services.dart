@@ -11,6 +11,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 // (login, registro, consulta de usuario autenticado)
 // habrá otras clases para hacer consultar a otras tablas de la bd
 class APIServices {
+  static Usuario loggedInUser;
+
   // es el nombre del key del token que se guarda en el storage
   static final String tokenStorageKeyName = "jwt";
 
@@ -40,10 +42,24 @@ class APIServices {
     final http.Response response = await http.post(endpointUrl,
         headers: headers, body: jsonEncode(usuario));
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return UserToken.fromJson(json.decode(response.body));
+      var token = UserToken.fromJson(json.decode(response.body));
+      // guardamos el token en el storage
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(tokenStorageKeyName, token.token);
+
+      await getAuthUser();
+
+      return token;
     } else {
       throw response.body;
     }
+  }
+
+  static Future<bool> disposeToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+
+    return true;
   }
 
   // metodo para registrar un usuario
@@ -131,7 +147,18 @@ class APIServices {
   static Future<Usuario> getAuthUser() async {
     int idUsuario = await _getIdUserFromToken();
     if (idUsuario == -1) return null;
-    return await getUser(idUsuario);
+    loggedInUser = await getUser(idUsuario);
+    return loggedInUser;
+  }
+
+  static Usuario getLoggedUser() {
+    return loggedInUser;
+  }
+
+  static bool isLoggedUserId(int id) {
+    if (loggedInUser != null) return loggedInUser.id == id;
+
+    return false;
   }
 
   // metodo para obtener el id del usuario logeado

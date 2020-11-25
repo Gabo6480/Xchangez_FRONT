@@ -24,17 +24,18 @@ class UserIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isUser = authUser == null;
+
     return SimpleIconButton(
       borderRadius: BorderRadius.circular(40),
       icon: CircleImage(
         size: 40,
-        image: NetworkImage((authUser == null)
+        image: NetworkImage(isUser
             ? "http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
             : authUser.imagenPerfil),
       ),
-      child: Text(authUser == null ? "Iniciar Sesión" : authUser.nombre),
-      onTap: () =>
-          authUser == null ? _goToLogin(context) : _goToProfile(context),
+      child: Text(isUser ? "Iniciar Sesión" : authUser.nombre),
+      onTap: () => isUser ? _goToLogin(context) : _goToProfile(context),
     );
   }
 }

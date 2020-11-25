@@ -119,6 +119,7 @@ class _FilterListState extends State<FilterList> {
   int _orderBy = 0;
   int _itemState = 0;
   int _time = 0;
+  bool _isTrade = false;
 
   final _orderByKey = GlobalKey<CustomExpansionTileState>();
   final _itemStateKey = GlobalKey<CustomExpansionTileState>();
@@ -202,6 +203,15 @@ class _FilterListState extends State<FilterList> {
                     _time = v;
                   }),
                 ),
+                CheckboxListTile(
+                    value: _isTrade,
+                    title: Text("Trueques",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    onChanged: (value) {
+                      setState(() {
+                        _isTrade = value ?? false;
+                      });
+                    }),
                 ListTile(
                   title: Text(
                     "Precio",

@@ -1,30 +1,29 @@
 class ObjetoLista {
   int id;
   int idLista;
-  String contenido;
+  String nombre;
   String descripcion;
   bool loBusca;
 
   ObjetoLista(
-      {this.id,
-      this.idLista,
-      this.contenido,
-      this.descripcion,
-      this.contenido,
-      this.loBusca});
+      {this.id = 0,
+      this.idLista = 0,
+      this.nombre = "",
+      this.descripcion = "",
+      this.loBusca = true});
 
   factory ObjetoLista.fromJson(Map<String, dynamic> json) => ObjetoLista(
       id: json["id"],
       idLista: json["idLista"],
       descripcion: json["descripcion"],
-      contenido: json["contenido"],
+      nombre: json["nombre"],
       loBusca: json["loBusca"]);
 
   Map<String, dynamic> toJson() => {
-        "id": this.id != null ? this.id : 0,
-        "idLista": this.idLista != null ? this.idLista : 0,
-        "descripcion": this.descripcion != null ? this.descripcion : "",
-        "contenido": this.contenido != null ? this.contenido : "",
-        "loBusca": this.loBusca != null ? this.loBusca : false
+        "id": this.id ?? 0,
+        "idLista": this.idLista ?? 0,
+        "descripcion": this.descripcion ?? "",
+        "nombre": this.nombre ?? "",
+        "loBusca": this.loBusca ?? false
       };
 }

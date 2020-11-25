@@ -7,9 +7,11 @@ import 'CustomNavBar.dart';
 import 'package:Xchangez/UserIconButton.dart';
 
 class CustomScaffold extends StatefulWidget {
-  CustomScaffold(this.body, {Key key}) : super(key: key);
+  CustomScaffold(this.body, {Key key, this.floatingActionButton})
+      : super(key: key);
 
   final Widget body;
+  final Widget floatingActionButton;
 
   @override
   State<StatefulWidget> createState() => _CustomScaffoldState();
@@ -19,15 +21,15 @@ class _CustomScaffoldState extends State<CustomScaffold> {
   bool isMenuOpen = false;
 
   Usuario authUser;
-  void _getAuthUserName() async {
-    authUser = await APIServices.getAuthUser();
+  void _getUser() {
+    authUser = APIServices.getLoggedUser();
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _getAuthUserName();
+    _getUser();
   }
 
   @override
@@ -46,6 +48,7 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                   isMenuOpen = !isMenuOpen;
                 }),
             authUser: authUser),
+        floatingActionButton: widget.floatingActionButton,
         body: Stack(
           children: [
             widget.body,

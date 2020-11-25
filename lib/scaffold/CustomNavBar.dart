@@ -1,6 +1,6 @@
 import 'package:Xchangez/LandingPage.dart';
 import 'package:Xchangez/model/Usuario.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Xchangez/services/api.services.dart';
 
 import 'CustomSearchBar.dart';
 import 'package:Xchangez/UserIconButton.dart';
@@ -32,62 +32,12 @@ class CustomNavBar extends StatefulWidget with PreferredSizeWidget {
 class _CustomNavState extends State<CustomNavBar> {
   bool isSearching = false;
 
-  OverlayEntry _overlayEntry;
-
-  OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject();
-    var size = renderBox.size;
-
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        width: 400,
-        height: 400,
-        right: 100,
-        top: widget.size,
-        child: Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          elevation: 4.0,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.history_rounded),
-                trailing: InkWell(
-                  child: Icon(Icons.close_rounded),
-                  onTap: () {},
-                ),
-                title: Text('Syria'),
-                onTap: () {
-                  print('Syria Tapped');
-                },
-              ),
-              ListTile(
-                title: Text('Lebanon'),
-                onTap: () {
-                  print('Lebanon Tapped');
-                },
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showMenu() {
-    setState(() {
-      this._overlayEntry = this._createOverlayEntry();
-      Overlay.of(context).insert(this._overlayEntry);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final mQuery = MediaQuery.of(context);
 
-    bool isBigEnoughProfile = mQuery.size.width > 800;
+    bool isBigEnoughProfile =
+        mQuery.size.width > 800 || widget.authUser == null;
     bool isBigEnoughSearch = mQuery.size.width > 650;
 
     ThemeData theme = Theme.of(context);
@@ -127,16 +77,45 @@ class _CustomNavState extends State<CustomNavBar> {
                       authUser: widget.authUser,
                     )
                   : SizedBox(),
-              IconButton(
-                  icon: NotificationBadge(
-                      child: Icon(Icons.notifications_rounded),
-                      notifications: 0),
-                  onPressed: _showMenu),
-              IconButton(
-                  icon: NotificationBadge(
-                      child: Icon(Icons.chat_bubble), notifications: 0),
-                  onPressed: () {}),
-              IconButton(icon: Icon(Icons.more_vert_rounded), onPressed: logout)
+              widget.authUser != null
+                  ? Row(
+                      children: [
+                        IconButton(
+                            icon: NotificationBadge(
+                                child: Icon(Icons.notifications_rounded),
+                                notifications: 0),
+                            onPressed: null),
+                        IconButton(
+                            icon: NotificationBadge(
+                                child: Icon(Icons.chat_bubble),
+                                notifications: 0),
+                            onPressed: () {}),
+                        PopupMenuButton(
+                          icon: Icon(Icons.more_vert_rounded),
+                          offset: Offset(100, 100),
+                          initialValue: 0,
+                          padding: EdgeInsets.all(4),
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<int>>[
+                            PopupMenuItem(
+                              value: 0,
+                              child: Text("Cerrar Sesión"),
+                            )
+                          ],
+                          onSelected: (result) {
+                            switch (result) {
+                              case 0:
+                                logout();
+                                break;
+                              default:
+                            }
+                          },
+                        )
+                      ],
+                    )
+                  : SizedBox(
+                      width: 40,
+                    ),
             ],
             flexibleSpace: isBigEnoughSearch
                 ? Container(
@@ -160,8 +139,7 @@ class _CustomNavState extends State<CustomNavBar> {
   }
 
   void logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    APIServices.disposeToken();
     Navigator.push(
         context, MaterialPageRoute(builder: (_context) => LandingPage()));
   }
