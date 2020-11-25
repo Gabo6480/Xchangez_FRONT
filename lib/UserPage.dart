@@ -41,10 +41,78 @@ class _UserPageState extends State<UserPage>
     List<Lista> _listas = await ListaServices.getAllByUserId(widget.userID);
     listas.clear();
     _listas.forEach((element) {
-      listas.add(_CustomList(list: element));
+      listas.add(_CustomList(
+        list: element,
+        delete: _deleteLista,
+        edit: _editLista,
+      ));
     });
 
     setState(() {});
+  }
+
+  void _deleteLista(Lista list) {
+    ThemeData theme = Theme.of(context);
+    Alert(
+        title: "¿Está seguro que desea eliminar la lista: " + list.nombre + "?",
+        desc: "Este es un cambio permanente.",
+        context: context,
+        type: AlertType.warning,
+        buttons: [
+          DialogButton(
+              color: theme.primaryColor,
+              child: Text(
+                "Aceptar",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () async {
+                if (await ListaServices.delete(list.id)) {
+                  Navigator.pop(context);
+                  _getUser();
+                }
+              }),
+          DialogButton(
+            color: Colors.redAccent,
+            child: Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ]).show();
+  }
+
+  void _editLista(Lista list) {
+    ThemeData theme = Theme.of(context);
+    Alert(
+        title: "Editar lista",
+        context: context,
+        type: AlertType.none,
+        content: _NewListForm(
+          key: listFormKey,
+          editLista: list,
+        ),
+        buttons: [
+          DialogButton(
+              color: theme.primaryColor,
+              child: Text(
+                "Aceptar",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                listFormKey.currentState.save();
+                Navigator.pop(context);
+                _getUser();
+              }),
+          DialogButton(
+            color: Colors.redAccent,
+            child: Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ]).show();
   }
 
   bool _showButton = false;
@@ -356,6 +424,24 @@ class _NewListObjState extends State<_NewListObj> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _descController =
+        TextEditingController(text: widget.objetoLista.descripcion)
+          ..addListener(() {
+            widget.objetoLista.descripcion = _descController.text;
+          });
+
+    _nameController = TextEditingController(text: widget.objetoLista.nombre)
+      ..addListener(() {
+        widget.objetoLista.nombre = _nameController.text;
+      });
+  }
+
+  var _descController;
+  var _nameController;
+
+  @override
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
@@ -370,14 +456,17 @@ class _NewListObjState extends State<_NewListObj> {
                 ]),
             child: ListTile(
               title: TextFormField(
+                controller: _nameController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 8),
-                    labelText: "Nombre del Objeto"),
+                  contentPadding: EdgeInsets.only(left: 8),
+                  labelText: "Nombre del Objeto",
+                ),
                 onSaved: (input) => widget.objetoLista.nombre = input,
               ),
               subtitle: TextFormField(
+                controller: _descController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
@@ -433,16 +522,15 @@ class _NewListObjState extends State<_NewListObj> {
 }
 
 class _NewListForm extends StatefulWidget {
-  _NewListForm({Key key}) : super(key: key);
-
+  _NewListForm({Key key, this.editLista}) : super(key: key);
+  final Lista editLista;
   @override
   State<StatefulWidget> createState() => _NewListFormState();
 }
 
 class _NewListFormState extends State<_NewListForm> {
-  Lista newLista = Lista();
+  Lista newLista;
   final _listFormKey = GlobalKey<FormState>();
-  bool _listCheckboxValue = true;
 
   List<ObjetoLista> objetosLista = List();
   List<GlobalKey<_NewListObjState>> objetosListaKeys = List();
@@ -453,14 +541,15 @@ class _NewListFormState extends State<_NewListForm> {
     objetosListaKeys.forEach((element) {
       element.currentState.save();
     });
-    newLista.esPublico = _listCheckboxValue;
     newLista.objetos = objetosLista;
-    //print(newLista.toJson());
-    ListaServices.create(newLista);
+    if (widget.editLista != null)
+      ListaServices.edit(newLista);
+    else
+      ListaServices.create(newLista);
   }
 
-  void addObjetoLista() {
-    objetosLista.add(ObjetoLista());
+  void addObjetoLista(ObjetoLista newObj) {
+    objetosLista.add(newObj);
     objetosListaKeys.add(GlobalKey<_NewListObjState>());
     objsListaWidgets.add(_NewListObj(
       objetosLista.last,
@@ -479,6 +568,32 @@ class _NewListFormState extends State<_NewListForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.editLista != null) {
+      newLista = widget.editLista;
+      widget.editLista.objetos.forEach((element) {
+        addObjetoLista(element);
+      });
+    } else {
+      newLista = Lista();
+    }
+
+    _descController = TextEditingController(text: newLista.descripcion)
+      ..addListener(() {
+        newLista.descripcion = _descController.text;
+      });
+
+    _nameController = TextEditingController(text: newLista.nombre)
+      ..addListener(() {
+        newLista.nombre = _nameController.text;
+      });
+  }
+
+  var _descController;
+  var _nameController;
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: 300,
@@ -488,6 +603,7 @@ class _NewListFormState extends State<_NewListForm> {
         child: ListView(
           children: [
                 TextFormField(
+                  controller: _nameController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -497,6 +613,7 @@ class _NewListFormState extends State<_NewListForm> {
                   onSaved: (input) => newLista.nombre = input,
                 ),
                 TextFormField(
+                  controller: _descController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
@@ -505,9 +622,9 @@ class _NewListFormState extends State<_NewListForm> {
                   onSaved: (input) => newLista.descripcion = input,
                 ),
                 CheckboxListTile(
-                  value: _listCheckboxValue,
+                  value: newLista.esPublico,
                   onChanged: (val) {
-                    setState(() => _listCheckboxValue = val);
+                    setState(() => newLista.esPublico = val);
                   },
                   title: Text("Publico"),
                 ),
@@ -518,7 +635,7 @@ class _NewListFormState extends State<_NewListForm> {
                 IconButton(
                     icon: Icon(Icons.add),
                     color: Colors.greenAccent,
-                    onPressed: addObjetoLista),
+                    onPressed: () => addObjetoLista(ObjetoLista())),
                 Divider(
                   color: Colors.black26,
                   thickness: 1,
@@ -558,9 +675,11 @@ class _CustomListTile extends StatelessWidget {
 }
 
 class _CustomList extends StatelessWidget {
-  _CustomList({Key key, this.list}) : super(key: key);
+  _CustomList({Key key, this.list, this.delete, this.edit}) : super(key: key);
 
   final Lista list;
+  final Function(Lista list) delete;
+  final Function(Lista list) edit;
 
   final List<Widget> tiles = List();
 
@@ -588,8 +707,20 @@ class _CustomList extends StatelessWidget {
       child: Column(
         children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    color: Colors.redAccent,
+                    onPressed: () => delete(list),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    color: Colors.blueAccent,
+                    onPressed: () => edit(list),
+                  ),
+                  Expanded(
+                    child: SizedBox(),
+                  ),
                   Icon(
                     list.esPublico ? Icons.public : Icons.lock,
                     color: Colors.black26,

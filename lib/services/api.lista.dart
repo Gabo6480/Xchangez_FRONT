@@ -7,6 +7,8 @@ import 'package:Xchangez/services/api.services.dart';
 // pero enfocada al controlador ListaServices de la Web API
 class ListaServices {
   static final String _urlCreate = "Lista/Create";
+  static final String _urlDelete = "Lista/";
+  static final String _urlEdit = "Lista";
   static final String _urlGetById = "Lista/";
   static final String _urlGetByUserId = "Lista/GetByIdUsuario/";
 
@@ -36,6 +38,41 @@ class ListaServices {
       return Lista.fromJson(json.decode(response.body));
     } else if (response.statusCode == 401) {
       throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para eliminar una lista por su id
+  static Future<bool> delete(int id) async {
+    // creamos la url
+    String endpointUrl = APIServices.getEndPoint(_urlDelete) + id.toString();
+    Map<String, String> headers = await APIServices.getHeaders(true);
+    final http.Response response =
+        await http.delete(endpointUrl, headers: headers);
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return true;
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para editar una publicación
+  static Future<bool> edit(Lista nodo) async {
+    // creamos la url
+    String endpointUrl =
+        APIServices.getEndPoint(_urlEdit, {"id": nodo.id.toString()});
+    Map<String, String> headers = await APIServices.getHeaders(true);
+    final http.Response response =
+        await http.post(endpointUrl, headers: headers, body: jsonEncode(nodo));
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return true;
     } else {
       throw response.body;
     }

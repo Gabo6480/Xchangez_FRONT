@@ -17,7 +17,7 @@ class APIServices {
   static final String tokenStorageKeyName = "jwt";
 
   // url de la api para hacer las consultas
-  static final String _urlHost = "https://xchangezapi.azurewebsites.net/api/";
+  static final String _urlHost = "xchangezapi.azurewebsites.net";
 
   // url del endpoint de la api para logearse
   static final String _urlAuthLogin = "Auth/Login";
@@ -32,7 +32,9 @@ class APIServices {
   static final String _urlAuthGetUsuario = "Auth/";
 
   // metodo que concatena la url de la api mas un endpoint
-  static String getEndPoint(String url) => _urlHost + url;
+  static String getEndPoint(String url,
+          [Map<String, String> queryParameters]) =>
+      Uri.https(_urlHost, "/api/" + url, queryParameters).toString();
 
   // metodo para logearse, regresa un UserToken
   static Future<UserToken> login(UserInfo usuario) async {

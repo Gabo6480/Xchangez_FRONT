@@ -11,9 +11,9 @@ class Lista {
   Lista(
       {this.id,
       this.idUsuario,
-      this.nombre,
-      this.descripcion,
-      this.esPublico,
+      this.nombre = "",
+      this.descripcion = "",
+      this.esPublico = false,
       this.objetos});
 
   factory Lista.fromJson(Map<String, dynamic> json) => Lista(
