@@ -1,11 +1,11 @@
 import 'package:Xchangez/LoginPage.dart';
-import 'package:Xchangez/UserPage.dart';
+import 'package:Xchangez/user/UserPage.dart';
 import 'package:Xchangez/extensions/CircleImage.dart';
 import 'package:Xchangez/extensions/SimpleIconButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'model/Usuario.dart';
+import '../model/Usuario.dart';
 
 class UserIconButton extends StatelessWidget {
   _goToLogin(BuildContext context) {
@@ -20,7 +20,7 @@ class UserIconButton extends StatelessWidget {
 
   UserIconButton({Key key, this.authUser}) : super(key: key);
 
-  Usuario authUser;
+  final Usuario authUser;
 
   @override
   Widget build(BuildContext context) {

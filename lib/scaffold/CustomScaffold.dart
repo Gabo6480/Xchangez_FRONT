@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'CustomNavBar.dart';
-import 'package:Xchangez/UserIconButton.dart';
+import 'package:Xchangez/user/UserIconButton.dart';
 
 class CustomScaffold extends StatefulWidget {
   CustomScaffold(this.body, {Key key, this.floatingActionButton})

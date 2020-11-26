@@ -3,9 +3,8 @@ import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/services/api.services.dart';
 
 import 'CustomSearchBar.dart';
-import 'package:Xchangez/UserIconButton.dart';
+import 'package:Xchangez/user/UserIconButton.dart';
 import 'package:Xchangez/extensions/NotificationBadge.dart';
-import 'package:Xchangez/extensions/SimpleIconButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
