@@ -7,6 +7,7 @@ class Publicacion {
   bool esBorrador;
   double precio;
   int estado;
+  bool esTrueque;
   DateTime fechaAlta;
   DateTime fechaModificacion;
 
@@ -16,9 +17,10 @@ class Publicacion {
       this.titulo,
       this.descripcion,
       this.caracteristicas,
-      this.esBorrador,
+      this.esBorrador = false,
       this.precio,
       this.estado,
+      this.esTrueque = false,
       this.fechaAlta,
       this.fechaModificacion});
 
@@ -31,19 +33,25 @@ class Publicacion {
       esBorrador: json["esBorrador"],
       precio: json["precio"],
       estado: json["estado"],
+      esTrueque: json["esTrueque"],
       fechaAlta: DateTime.tryParse(json["fechaAlta"]),
       fechaModificacion: DateTime.tryParse(json["fechaModificacion"]));
 
   Map<String, dynamic> toJson() => {
-        "id": this.id != null ? this.id : 0,
-        "idUsuario": this.idUsuario != null ? this.idUsuario : 0,
-        "titulo": this.titulo != null ? this.titulo : "",
-        "descripcion": this.descripcion != null ? this.descripcion : "",
-        "caracteristicas": this.caracteristicas != null ? this.caracteristicas : "",
-        "esBorrador": this.esBorrador != null ? this.esBorrador : false,
-        "precio": this.precio != null ? this.precio : 0,
-        "estado": this.estado != null ? this.estado : 0,
-        "fechaAlta": this.fechaAlta != null ? this.fechaAlta.toIso8601String() : DateTime.now().toIso8601String(),
-        "fechaModificacion": this.fechaModificacion != null ? this.fechaAlta.toIso8601String() : DateTime.now().toIso8601String()
+        "id": this.id ?? 0,
+        "idUsuario": this.idUsuario ?? 0,
+        "titulo": this.titulo ?? "",
+        "descripcion": this.descripcion ?? "",
+        "caracteristicas": this.caracteristicas ?? "",
+        "esBorrador": this.esBorrador ?? false,
+        "precio": this.precio ?? 0,
+        "estado": this.estado ?? 0,
+        "esTrueque": this.esTrueque ?? false,
+        "fechaAlta": this.fechaAlta != null
+            ? this.fechaAlta.toIso8601String()
+            : DateTime.now().toIso8601String(),
+        "fechaModificacion": this.fechaModificacion != null
+            ? this.fechaAlta.toIso8601String()
+            : DateTime.now().toIso8601String()
       };
 }
