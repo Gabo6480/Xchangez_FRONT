@@ -1,8 +1,10 @@
 import 'package:Xchangez/CustomCarousel.dart';
 import 'package:Xchangez/CustomListView.dart';
+import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LandingPage extends StatefulWidget {
   LandingPage({Key key}) : super(key: key);

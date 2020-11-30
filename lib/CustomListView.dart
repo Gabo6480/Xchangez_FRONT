@@ -1,4 +1,5 @@
 import 'package:Xchangez/CustomItemCard.dart';
+import 'package:Xchangez/model/Publicacion.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class _CustomListViewState extends State<CustomListView> {
                   controller: _controller,
                   itemCount: 15,
                   itemBuilder: (context, index) {
-                    return CustomItemCard();
+                    return CustomItemCard(Publicacion());
                   },
                 )),
             Row(

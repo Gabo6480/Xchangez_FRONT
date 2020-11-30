@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:Xchangez/model/Usuario.dart';
+import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
+import 'package:Xchangez/CustomGridView.dart';
 import 'package:Xchangez/services/api.lista.dart';
+import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -34,20 +37,8 @@ class _UserPageState extends State<UserPage>
   final listFormKey = GlobalKey<ListaNewListFormState>();
 
   Usuario authUser;
-  List<Widget> listas = List();
   void _getUser() async {
     authUser = await APIServices.getUser(widget.userID);
-
-    List<Lista> _listas = await ListaServices.getAllByUserId(widget.userID);
-    listas.clear();
-    _listas.forEach((element) {
-      listas.add(ListaCustomList(
-        list: element,
-        delete: _deleteLista,
-        edit: _editLista,
-      ));
-    });
-
     setState(() {});
   }
 
@@ -115,6 +106,86 @@ class _UserPageState extends State<UserPage>
         ]).show();
   }
 
+  void _createLista() {
+    ThemeData theme = Theme.of(context);
+
+    Alert(
+        title: "Crear nueva lista",
+        context: context,
+        type: AlertType.none,
+        content: ListaNewListForm(
+          key: listFormKey,
+        ),
+        buttons: [
+          DialogButton(
+              color: theme.primaryColor,
+              child: Text(
+                "Aceptar",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                listFormKey.currentState.save();
+                Navigator.pop(context);
+                _getUser();
+              }),
+          DialogButton(
+            color: Colors.redAccent,
+            child: Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ]).show();
+  }
+
+  final _newProductStateKey = GlobalKey<ProductNewItemState>();
+  void _createPublicacion() {
+    Alert(
+        title: "Nueva publicación",
+        context: context,
+        type: AlertType.none,
+        content: ProductNewItem(
+          key: _newProductStateKey,
+        ),
+        buttons: [
+          DialogButton(
+            color: Colors.greenAccent,
+            child: Text(
+              "Publicar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () async {
+              if (await _newProductStateKey.currentState.saveAs(false)) {
+                Navigator.pop(context);
+                _getUser();
+              }
+            },
+          ),
+          DialogButton(
+            height: null,
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+            child: Text(
+              "Guardar Borrador",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {
+              _newProductStateKey.currentState.saveAs(true);
+              Navigator.pop(context);
+              _getUser();
+            },
+          ),
+          DialogButton(
+            color: Colors.redAccent,
+            child: Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ]).show();
+  }
+
   bool _showButton = false;
 
   @override
@@ -139,44 +210,12 @@ class _UserPageState extends State<UserPage>
           _floatingButton = FloatingActionButton(
               child: Icon(Icons.note_add_outlined),
               backgroundColor: theme.primaryColor,
-              onPressed: () {
-                // Add your onPressed code here!
-              });
+              onPressed: _createPublicacion);
           setState(() {});
           break;
         case 1:
           _floatingButton = FloatingActionButton(
-              child: Icon(Icons.post_add),
-              onPressed: () {
-                Alert(
-                    title: "Crear nueva lista",
-                    context: context,
-                    type: AlertType.none,
-                    content: ListaNewListForm(
-                      key: listFormKey,
-                    ),
-                    buttons: [
-                      DialogButton(
-                          color: theme.primaryColor,
-                          child: Text(
-                            "Aceptar",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          onPressed: () {
-                            listFormKey.currentState.save();
-                            Navigator.pop(context);
-                            _getUser();
-                          }),
-                      DialogButton(
-                        color: Colors.redAccent,
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ]).show();
-              });
+              child: Icon(Icons.post_add), onPressed: _createLista);
           setState(() {});
           break;
         case 2:
@@ -330,24 +369,47 @@ class _UserPageState extends State<UserPage>
                   child: TabBarView(controller: _tabController, children: [
                     Container(
                       alignment: Alignment.center,
-                      child: Text('Display Tab 1',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold)),
+                      child: CustomGridView(
+                        PublicacionServices.getAllfromUser(widget.userID),
+                        updateParent: _getUser,
+                      ),
                     ),
                     Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(10),
-                        child: ListView(
-                          children: listas +
-                              [
-                                listas.isEmpty
-                                    ? Text('Aquí no hay nada...',
+                        child: FutureBuilder(
+                          future: ListaServices.getAllByUserId(widget.userID),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                        ConnectionState.none &&
+                                    snapshot.hasData == null ||
+                                snapshot.data == null)
+                              return Text('Cargando...',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold));
+                            else
+                              return ListView.builder(
+                                itemCount: snapshot.data.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index < snapshot.data.length)
+                                    return ListaCustomList(
+                                      list: snapshot.data[index],
+                                      delete: _deleteLista,
+                                      edit: _editLista,
+                                    );
+                                  else if (snapshot.data.isNotEmpty)
+                                    return SizedBox();
+                                  else
+                                    return Text('Aquí no hay nada...',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: 22,
-                                            fontWeight: FontWeight.bold))
-                                    : SizedBox()
-                              ],
+                                            fontWeight: FontWeight.bold));
+                                },
+                              );
+                          },
                         )),
                     Container(
                       alignment: Alignment.center,

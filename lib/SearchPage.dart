@@ -1,6 +1,7 @@
 import 'package:Xchangez/CustomExpansionTile.dart';
 import 'package:Xchangez/CustomGridView.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
+import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +42,8 @@ class _SearchPageState extends State<SearchPage> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 width: mQuery.size.width - width,
-                child: CustomGridView(),
+                child:
+                    CustomGridView(PublicacionServices.getAll(quantity: 99999)),
               )
             ],
           )
@@ -53,7 +55,8 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 height: mQuery.size.height - 115,
                 width: mQuery.size.width,
-                child: CustomGridView(),
+                child:
+                    CustomGridView(PublicacionServices.getAll(quantity: 99999)),
               ),
               IgnorePointer(
                   ignoring: !isMenuOpen,

@@ -31,7 +31,7 @@ class ListaServices {
   static Future<Lista> get(int id) async {
     // creamos la url
     String endpointUrl = APIServices.getEndPoint(_urlGetById) + id.toString();
-    Map<String, String> headers = await APIServices.getHeaders(true);
+    Map<String, String> headers = await APIServices.getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -83,7 +83,7 @@ class ListaServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urlGetByUserId) + id.toString();
-    Map<String, String> headers = await APIServices.getHeaders(true);
+    Map<String, String> headers = await APIServices.getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {

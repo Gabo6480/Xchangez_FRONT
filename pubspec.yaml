@@ -55,6 +55,12 @@ dependencies:
   # para la info del token
   jwt_decoder: ^1.0.3
 
+  # formato de la fecha
+  intl: ^0.16.1
+
+  # saber tipo de archivo
+  mime: ^0.9.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

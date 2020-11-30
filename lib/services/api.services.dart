@@ -82,7 +82,7 @@ class APIServices {
   static Future<Usuario> getUser(int id) async {
     // creamos la url (ejemplo: https://localhost:44386/api/Auth/1)
     String endpointUrl = getEndPoint(_urlAuthGetUsuario) + id.toString();
-    Map<String, String> headers = await getHeaders(true);
+    Map<String, String> headers = await getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {

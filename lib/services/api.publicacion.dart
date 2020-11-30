@@ -9,13 +9,17 @@ import 'package:Xchangez/services/api.services.dart';
 // pero enfocada al controlador PublicacionController de la Web API
 class PublicacionServices {
   static final String _urlCreate = "Publicacion/Create";
-  static final String _urlCreateWithFiles = "Publicacion/CreateWithFiles";
+  static final String _urlAddFile = "Publicacion/AddFile";
   static final String _urlGetById = "Publicacion/";
   static final String _urlDeleteById = "Publicacion/";
   static final String _urlUpdateById = "Publicacion";
   static final String _urlGetFilesByPostId = "Publicacion/GetFiles/";
   static final String _urldeleteFileById = "Publicacion/DeleteFile/";
-  static final String _urlGet = "Publicacion/Publicaciones";
+  static final String _urlGetAllFromUser =
+      "Publicacion/PublicacionesByIdUsuario/";
+  static final String _urlGet = "Publicacion/Publicaciones/";
+  static final String _urlGetRelevant = "Publicacion/PublicacionesRelevantes/";
+  static final String _urlGetRecent = "Publicacion/PublicacionesRecientes/";
 
   // metodo para crear una publicación
   static Future<Publicacion> create(Publicacion nodo) async {
@@ -34,7 +38,7 @@ class PublicacionServices {
 
   //metodo para agregar un archivo a la publicación
   static Future<bool> addFile(int idPublicacion, PlatformFile archivo) async {
-    String endpointUrl = APIServices.getEndPoint(_urlCreateWithFiles);
+    String endpointUrl = APIServices.getEndPoint(_urlAddFile);
     Map<String, String> headers = await APIServices.getHeadersMultiPart(true);
     final request = http.MultipartRequest(
       'POST',
@@ -78,7 +82,7 @@ class PublicacionServices {
   static Future<Publicacion> getPost(int id) async {
     // creamos la url
     String endpointUrl = APIServices.getEndPoint(_urlGetById) + id.toString();
-    Map<String, String> headers = await APIServices.getHeaders(true);
+    Map<String, String> headers = await APIServices.getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -133,7 +137,7 @@ class PublicacionServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urlGetFilesByPostId) + id.toString();
-    Map<String, String> headers = await APIServices.getHeaders(true);
+    Map<String, String> headers = await APIServices.getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -148,14 +152,73 @@ class PublicacionServices {
   }
 
   // metodo para obtener todas las publicaciones
-  static Future<Publicacion> getAll() async {
+  static Future<List<Publicacion>> getAllfromUser(int userID) async {
     // creamos la url
-    String endpointUrl = APIServices.getEndPoint(_urlGet);
-    Map<String, String> headers = await APIServices.getHeaders(true);
+    String endpointUrl =
+        APIServices.getEndPoint(_urlGetAllFromUser) + userID.toString();
+    Map<String, String> headers = await APIServices.getHeaders(false);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return Publicacion.fromJson(json.decode(response.body));
+      return (json.decode(response.body) as List)
+          .map((e) => Publicacion.fromJson(e))
+          .toList();
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para obtener todas las publicaciones
+  static Future<List<Publicacion>> getAll({int quantity = 20}) async {
+    // creamos la url
+    String endpointUrl = APIServices.getEndPoint(_urlGet) + quantity.toString();
+    Map<String, String> headers = await APIServices.getHeaders(false);
+    final http.Response response =
+        await http.get(endpointUrl, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return (json.decode(response.body) as List)
+          .map((e) => Publicacion.fromJson(e))
+          .toList();
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para obtener todas las publicaciones relevantes
+  static Future<List<Publicacion>> getAllRelevant({int quantity = 20}) async {
+    // creamos la url
+    String endpointUrl =
+        APIServices.getEndPoint(_urlGetRelevant) + quantity.toString();
+    Map<String, String> headers = await APIServices.getHeaders(false);
+    final http.Response response =
+        await http.get(endpointUrl, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return (json.decode(response.body) as List)
+          .map((e) => Publicacion.fromJson(e))
+          .toList();
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para obtener todas las publicaciones recent
+  static Future<List<Publicacion>> getAllRecent({int quantity = 20}) async {
+    // creamos la url
+    String endpointUrl =
+        APIServices.getEndPoint(_urlGetRecent) + quantity.toString();
+    Map<String, String> headers = await APIServices.getHeaders(false);
+    final http.Response response =
+        await http.get(endpointUrl, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return (json.decode(response.body) as List)
+          .map((e) => Publicacion.fromJson(e))
+          .toList();
     } else if (response.statusCode == 401) {
       throw Exception("");
     } else {

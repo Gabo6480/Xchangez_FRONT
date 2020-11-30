@@ -77,8 +77,9 @@ class ListaNewListFormState extends State<ListaNewListForm> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
-      width: 300,
+      width: width * .9,
       height: 450,
       child: Form(
         key: _listFormKey,
@@ -105,6 +106,7 @@ class ListaNewListFormState extends State<ListaNewListForm> {
                 ),
                 CheckboxListTile(
                   value: newLista.esPublico,
+                  controlAffinity: ListTileControlAffinity.leading,
                   onChanged: (val) {
                     setState(() => newLista.esPublico = val);
                   },
