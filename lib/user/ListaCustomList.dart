@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ListaCustomList extends StatelessWidget {
-  ListaCustomList({Key key, this.list, this.delete, this.edit})
+  ListaCustomList(
+      {Key key, this.list, this.delete, this.edit, this.isOwner = false})
       : super(key: key);
 
   final Lista list;
   final Function(Lista list) delete;
   final Function(Lista list) edit;
+
+  final bool isOwner;
 
   final List<Widget> tiles = List();
 
@@ -37,25 +40,29 @@ class ListaCustomList extends StatelessWidget {
       child: Column(
         children: <Widget>[
               Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    color: Colors.redAccent,
-                    onPressed: () => delete(list),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    color: Colors.blueAccent,
-                    onPressed: () => edit(list),
-                  ),
-                  Expanded(
-                    child: SizedBox(),
-                  ),
-                  Icon(
-                    list.esPublico ? Icons.public : Icons.lock,
-                    color: Colors.black26,
-                  )
-                ],
+                children: (isOwner
+                        ? <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Colors.redAccent,
+                              onPressed: () => delete(list),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              color: Colors.blueAccent,
+                              onPressed: () => edit(list),
+                            ),
+                          ]
+                        : <Widget>[SizedBox()]) +
+                    [
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Icon(
+                        list.esPublico ? Icons.public : Icons.lock,
+                        color: Colors.black26,
+                      )
+                    ],
               ),
               Text(
                 list.nombre,

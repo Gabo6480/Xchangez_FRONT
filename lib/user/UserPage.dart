@@ -398,6 +398,7 @@ class _UserPageState extends State<UserPage>
                                       list: snapshot.data[index],
                                       delete: _deleteLista,
                                       edit: _editLista,
+                                      isOwner: widget.isLoggedUser,
                                     );
                                   else if (snapshot.data.isNotEmpty)
                                     return SizedBox();

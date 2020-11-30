@@ -60,6 +60,7 @@ class APIServices {
   static Future<bool> disposeToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    loggedInUser = null;
 
     return true;
   }

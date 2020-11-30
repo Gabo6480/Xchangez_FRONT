@@ -10,6 +10,7 @@ import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
+import 'package:Xchangez/user/UserPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -227,7 +228,8 @@ class UserScoreCard extends StatelessWidget {
       ),
       title: HoverText(user.nombre + " " + user.apellido,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          onTap: () {}),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_context) => UserPage(user.id)))),
       subtitle: Row(
         children: stars +
             [
