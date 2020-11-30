@@ -26,16 +26,12 @@ class _CommentTileState extends State<CommentTile> {
   List<Widget> respuestas = List();
 
   @override
-  void initState() {
-    super.initState();
-
+  Widget build(BuildContext context) {
+    respuestas.clear();
     widget.comment.comentarios.forEach((element) {
       respuestas.add(ResponseTile(element));
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return ListTile(
       leading: CircleImage(
         image: NetworkImage(widget.comment.rutaImagenAvatar),
