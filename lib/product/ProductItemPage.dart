@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:Xchangez/CommentTile.dart';
+import 'package:Xchangez/product/CommentTile.dart';
 import 'package:Xchangez/CustomCarousel.dart';
 import 'package:Xchangez/extensions/CircleImage.dart';
 import 'package:Xchangez/extensions/HoverText.dart';
@@ -8,6 +6,7 @@ import 'package:Xchangez/extensions/VideoPlayer.dart';
 import 'package:Xchangez/model/Publicacion.dart';
 import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
+import 'package:Xchangez/services/api.comentario.dart';
 import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
 import 'package:Xchangez/user/UserPage.dart';
@@ -188,13 +187,38 @@ class _ProductItemState extends State<ProductItemPage> {
               borderRadius: BorderRadius.circular(20)),
           child: Column(
             children: [
-              ResponseTextFiled(),
+              ResponseTextFiled(APIServices.loggedInUser, widget.post.id,
+                  () => setState(() {})),
               Divider(
                 color: Colors.black26,
                 thickness: 1,
               ),
-              CommentTile(),
-              CommentTile()
+              FutureBuilder(
+                future: ComentarioServices.getAllByPostId(widget.post.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.none &&
+                          snapshot.hasData == null ||
+                      snapshot.data == null)
+                    return Text('Cargando...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold));
+                  else if (snapshot.data.isNotEmpty) {
+                    List<Widget> _comentarios = List();
+                    snapshot.data.forEach((element) {
+                      _comentarios.add(CommentTile(
+                          element, widget.post.id, () => setState(() {})));
+                    });
+                    return Column(
+                      children: _comentarios,
+                    );
+                  } else
+                    return Text('Aquí aún no hay comentarios...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold));
+                },
+              )
             ],
           ))
     ]));

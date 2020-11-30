@@ -16,7 +16,7 @@ class PublicacionServices {
   static final String _urlGetFilesByPostId = "Publicacion/GetFiles/";
   static final String _urldeleteFileById = "Publicacion/DeleteFile/";
   static final String _urldeleteAllFilesFromPost =
-      "Publicacion/DeleteAllFiles/";
+      "Publicacion/DeleteMultimediasByIdPublicacion/";
   static final String _urlGetAllFromUser =
       "Publicacion/PublicacionesByIdUsuario/";
   static final String _urlGet = "Publicacion/Publicaciones/";
