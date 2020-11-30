@@ -8,13 +8,18 @@ import 'package:Xchangez/user/UserPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CommentTile extends StatefulWidget {
   CommentTile(this.comment, this.postId, this.updateParent, {Key key})
-      : super(key: key);
+      : this.isLoggedUser = APIServices.isLoggedUserId(comment.idUsuario),
+        super(key: key);
   final Comentario comment;
   final int postId;
   final Function updateParent;
+
+  final bool isLoggedUser;
+
   @override
   State<StatefulWidget> createState() => _CommentTileState();
 }
@@ -29,13 +34,55 @@ class _CommentTileState extends State<CommentTile> {
   Widget build(BuildContext context) {
     respuestas.clear();
     widget.comment.comentarios.forEach((element) {
-      respuestas.add(ResponseTile(element));
+      respuestas.add(ResponseTile(element, widget.updateParent));
     });
 
     return ListTile(
       leading: CircleImage(
         image: NetworkImage(widget.comment.rutaImagenAvatar),
       ),
+      trailing: widget.isLoggedUser
+          ? IconButton(
+              icon: Icon(
+                Icons.delete,
+                color: Colors.redAccent,
+              ),
+              onPressed: () {
+                ThemeData theme = Theme.of(context);
+                Alert(
+                    title: "¿Está seguro que desea eliminar el comentario: " +
+                        widget.comment.contenido +
+                        "?",
+                    desc: "Este es un cambio permanente.",
+                    context: context,
+                    type: AlertType.warning,
+                    buttons: [
+                      DialogButton(
+                          color: theme.primaryColor,
+                          child: Text(
+                            "Aceptar",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          onPressed: () async {
+                            if (await ComentarioServices.delete(
+                                widget.comment.id)) {
+                              Navigator.pop(context);
+                              if (widget.updateParent != null)
+                                widget.updateParent();
+                            }
+                          }),
+                      DialogButton(
+                        color: Colors.redAccent,
+                        child: Text(
+                          "Cancelar",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ]).show();
+              },
+            )
+          : SizedBox(),
       title: Row(children: [
         HoverText(widget.comment.nombreCompleto,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -110,28 +157,72 @@ class _CommentTileState extends State<CommentTile> {
 }
 
 class ResponseTile extends StatelessWidget {
-  ResponseTile(this.comment);
+  ResponseTile(this.comment, this.updateParent)
+      : isLoggedUser = APIServices.isLoggedUserId(comment.idUsuario);
 
   final Comentario comment;
+  final bool isLoggedUser;
+
+  final Function updateParent;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleImage(
-        image: NetworkImage(comment.rutaImagenAvatar),
-      ),
-      title: Row(children: [
-        HoverText(comment.nombreCompleto,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_context) => UserPage(comment.idUsuario)))),
-        Text("  -  " + DateFormat('dd/MM/yyyy').format(comment.fechaAlta),
-            style: TextStyle(fontSize: 12, color: Colors.grey))
-      ]),
-      subtitle: Text(comment.contenido),
-    );
+        leading: CircleImage(
+          image: NetworkImage(comment.rutaImagenAvatar),
+        ),
+        title: Row(children: [
+          HoverText(comment.nombreCompleto,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_context) => UserPage(comment.idUsuario)))),
+          Text("  -  " + DateFormat('dd/MM/yyyy').format(comment.fechaAlta),
+              style: TextStyle(fontSize: 12, color: Colors.grey))
+        ]),
+        subtitle: Text(comment.contenido),
+        trailing: isLoggedUser
+            ? IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () {
+                  ThemeData theme = Theme.of(context);
+                  Alert(
+                      title: "¿Está seguro que desea eliminar el comentario: " +
+                          comment.contenido +
+                          "?",
+                      desc: "Este es un cambio permanente.",
+                      context: context,
+                      type: AlertType.warning,
+                      buttons: [
+                        DialogButton(
+                            color: theme.primaryColor,
+                            child: Text(
+                              "Aceptar",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () async {
+                              if (await ComentarioServices.delete(comment.id)) {
+                                Navigator.pop(context);
+                                if (updateParent != null) updateParent();
+                              }
+                            }),
+                        DialogButton(
+                          color: Colors.redAccent,
+                          child: Text(
+                            "Cancelar",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ]).show();
+                },
+              )
+            : SizedBox());
   }
 }
 

@@ -168,10 +168,46 @@ class _CustomItemCardState extends State<CustomItemCard> {
                                       ),
                                     ),
                                     onTap: () {
-                                      PublicacionServices.deletePost(
-                                          widget.post.id);
-                                      if (widget.updateParent != null)
-                                        widget.updateParent();
+                                      ThemeData theme = Theme.of(context);
+                                      Alert(
+                                          title:
+                                              "¿Está seguro que desea eliminar la publicación: " +
+                                                  widget.post.titulo +
+                                                  "?",
+                                          desc: "Este es un cambio permanente.",
+                                          context: context,
+                                          type: AlertType.warning,
+                                          buttons: [
+                                            DialogButton(
+                                                color: theme.primaryColor,
+                                                child: Text(
+                                                  "Aceptar",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                ),
+                                                onPressed: () async {
+                                                  if (await PublicacionServices
+                                                      .deletePost(
+                                                          widget.post.id)) {
+                                                    Navigator.pop(context);
+                                                    if (widget.updateParent !=
+                                                        null)
+                                                      widget.updateParent();
+                                                  }
+                                                }),
+                                            DialogButton(
+                                              color: Colors.redAccent,
+                                              child: Text(
+                                                "Cancelar",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            )
+                                          ]).show();
                                     }),
                               ),
                               widget.post.esBorrador
