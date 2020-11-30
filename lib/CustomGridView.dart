@@ -1,5 +1,4 @@
 import 'package:Xchangez/CustomItemCard.dart';
-import 'package:Xchangez/model/Publicacion.dart';
 import 'package:flutter/cupertino.dart';
 
 class CustomGridView extends StatelessWidget {

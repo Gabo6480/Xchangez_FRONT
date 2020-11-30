@@ -2,6 +2,7 @@ import 'package:Xchangez/CustomCarousel.dart';
 import 'package:Xchangez/CustomListView.dart';
 import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
+import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -24,21 +25,9 @@ class _LandingPageState extends State<LandingPage> {
       CustomCarousel(
         height: carouselHeight,
       ),
-      Container(
-          color: Colors.white,
-          margin: EdgeInsets.symmetric(vertical: 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: EdgeInsets.only(left: 15, top: 8),
-                  child: Text(
-                    "Popular",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  )),
-              CustomListView()
-            ],
-          )),
+      CustomListView("Popular", PublicacionServices.getAllRelevant()),
+      CustomListView("Reciente", PublicacionServices.getAllRecent()),
+      CustomListView("Variado", PublicacionServices.getAll())
     ]));
   }
 }
