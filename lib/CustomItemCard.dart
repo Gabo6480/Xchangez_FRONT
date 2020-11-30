@@ -1,9 +1,11 @@
 import 'package:Xchangez/model/Publicacion.dart';
 import 'package:Xchangez/product/ProductItemPage.dart';
+import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CustomItemCard extends StatefulWidget {
   CustomItemCard(this.post, {Key key, this.updateParent})
@@ -21,6 +23,56 @@ class CustomItemCard extends StatefulWidget {
 
 class _CustomItemCardState extends State<CustomItemCard> {
   bool isHovered = false;
+
+  final _editProductStateKey = GlobalKey<ProductNewItemState>();
+  void _editPublicacion() {
+    Alert(
+        title: "Editar publicación",
+        context: context,
+        type: AlertType.none,
+        content: ProductNewItem(
+          key: _editProductStateKey,
+          edit: widget.post,
+        ),
+        buttons: [
+          DialogButton(
+            color: Colors.greenAccent,
+            child: Text(
+              "Publicar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () async {
+              if (await _editProductStateKey.currentState.saveAs(false)) {
+                Navigator.pop(context);
+                if (widget.updateParent != null) widget.updateParent();
+              }
+            },
+          ),
+          DialogButton(
+            color: !widget.post.esBorrador ? Colors.grey : null,
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+            child: Text(
+              "Guardar Borrador",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: widget.post.esBorrador
+                ? () {
+                    _editProductStateKey.currentState.saveAs(true);
+                    Navigator.pop(context);
+                    if (widget.updateParent != null) widget.updateParent();
+                  }
+                : null,
+          ),
+          DialogButton(
+            color: Colors.redAccent,
+            child: Text(
+              "Cancelar",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+          )
+        ]).show();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +142,7 @@ class _CustomItemCardState extends State<CustomItemCard> {
                                         size: 15,
                                       ),
                                     ),
-                                    onTap: () {
-                                      print("edit");
-                                    }),
+                                    onTap: _editPublicacion),
                               ),
                               Positioned(
                                 top: 5,

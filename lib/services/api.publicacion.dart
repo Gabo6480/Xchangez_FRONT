@@ -15,6 +15,8 @@ class PublicacionServices {
   static final String _urlUpdateById = "Publicacion";
   static final String _urlGetFilesByPostId = "Publicacion/GetFiles/";
   static final String _urldeleteFileById = "Publicacion/DeleteFile/";
+  static final String _urldeleteAllFilesFromPost =
+      "Publicacion/DeleteAllFiles/";
   static final String _urlGetAllFromUser =
       "Publicacion/PublicacionesByIdUsuario/";
   static final String _urlGet = "Publicacion/Publicaciones/";
@@ -64,6 +66,24 @@ class PublicacionServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urldeleteFileById) + id.toString();
+    Map<String, String> headers = await APIServices.getHeaders(true);
+    final http.Response response =
+        await http.delete(endpointUrl, headers: headers);
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return true;
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  static Future<bool> deleteAllFilesFromPost(int id) async {
+    // creamos la url
+    String endpointUrl =
+        APIServices.getEndPoint(_urldeleteAllFilesFromPost) + id.toString();
     Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.delete(endpointUrl, headers: headers);

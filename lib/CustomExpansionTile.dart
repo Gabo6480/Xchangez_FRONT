@@ -2,19 +2,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomExpansionTile extends StatefulWidget {
-  CustomExpansionTile({Key key, this.title = "", this.options, this.onChange})
+  CustomExpansionTile(
+      {Key key,
+      this.title = "",
+      this.options,
+      this.onChange,
+      this.initialSelection = 0})
       : super(key: key);
 
   final String title;
   final List<String> options;
   final Function(int) onChange;
+  final int initialSelection;
 
   @override
   State<StatefulWidget> createState() => CustomExpansionTileState();
 }
 
 class CustomExpansionTileState extends State<CustomExpansionTile> {
-  int _selectedOption = 0;
+  int _selectedOption;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOption = widget.initialSelection;
+  }
 
   void clearSelection() {
     setState(() {

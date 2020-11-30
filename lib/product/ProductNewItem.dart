@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mime/mime.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import '../CustomExpansionTile.dart';
 import 'FeaturesExpansionTile.dart';
 
 class ProductNewItem extends StatefulWidget {
-  ProductNewItem({Key key}) : super(key: key);
+  ProductNewItem({Key key, this.edit}) : super(key: key);
+
+  final Publicacion edit;
 
   @override
   State<StatefulWidget> createState() => ProductNewItemState();
@@ -40,13 +43,19 @@ class ProductNewItemState extends State<ProductNewItem> {
 
     newPubli.esBorrador = isDraft;
 
-    var createdPubli = await PublicacionServices.create(newPubli);
+    var createdPubli;
 
-    print(json.encode(createdPubli));
+    if (widget.edit == null)
+      createdPubli = await PublicacionServices.create(newPubli);
+    else {
+      createdPubli = await PublicacionServices.updatePost(newPubli);
+      //Eliminar todos los archivos
+      await PublicacionServices.deleteAllFilesFromPost(createdPubli.id);
+    }
 
-    archivos.forEach((element) async {
+    for (var element in archivos) {
       await PublicacionServices.addFile(createdPubli.id, element);
-    });
+    }
 
     return true;
   }
@@ -77,11 +86,32 @@ class ProductNewItemState extends State<ProductNewItem> {
     return result;
   }
 
+  void loadImages() async {
+    var images = await PublicacionServices.getFilesByPostId(widget.edit.id);
+
+    for (var element in images) {
+      http.Response response = await http
+          .get("https://cors-anywhere.herokuapp.com/" + element.ruta, headers: {
+        'Content-Type': lookupMimeType(element.nombre + element.ecstension)
+      });
+
+      archivos.add(PlatformFile(
+          name: element.nombre + element.ecstension,
+          bytes: response.bodyBytes));
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
 
-    newPubli = Publicacion();
+    if (widget.edit != null) {
+      newPubli = widget.edit;
+      loadImages();
+    } else
+      newPubli = Publicacion();
 
     _priceController = TextEditingController(
         text: newPubli.precio == 0 ? "" : newPubli.precio.toString())
@@ -178,6 +208,7 @@ class ProductNewItemState extends State<ProductNewItem> {
                 CustomExpansionTile(
                   key: _itemStateKey,
                   title: "Estado del artículo",
+                  initialSelection: newPubli.estado.index,
                   options: ["Indefinido", "Nuevo", "Usado"],
                   onChange: (v) => setState(() {
                     newPubli.estado = Estado.values[v];

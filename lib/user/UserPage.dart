@@ -163,7 +163,6 @@ class _UserPageState extends State<UserPage>
             },
           ),
           DialogButton(
-            height: null,
             padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
             child: Text(
               "Guardar Borrador",
