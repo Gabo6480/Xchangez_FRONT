@@ -39,8 +39,6 @@ class _CustomNavState extends State<CustomNavBar> {
         mQuery.size.width > 800 || widget.authUser == null;
     bool isBigEnoughSearch = mQuery.size.width > 650;
 
-    ThemeData theme = Theme.of(context);
-
     if (isBigEnoughSearch && isSearching)
       setState(() {
         isSearching = false;
@@ -89,27 +87,6 @@ class _CustomNavState extends State<CustomNavBar> {
                                 child: Icon(Icons.chat_bubble),
                                 notifications: 0),
                             onPressed: () {}),
-                        PopupMenuButton(
-                          icon: Icon(Icons.more_vert_rounded),
-                          offset: Offset(100, 100),
-                          initialValue: 0,
-                          padding: EdgeInsets.all(4),
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<int>>[
-                            PopupMenuItem(
-                              value: 0,
-                              child: Text("Cerrar Sesión"),
-                            )
-                          ],
-                          onSelected: (result) {
-                            switch (result) {
-                              case 0:
-                                logout();
-                                break;
-                              default:
-                            }
-                          },
-                        )
                       ],
                     )
                   : SizedBox(
@@ -135,11 +112,5 @@ class _CustomNavState extends State<CustomNavBar> {
               height: widget.preferredSize.height,
               child: CustomSearchBar(),
             ));
-  }
-
-  void logout() async {
-    APIServices.disposeToken();
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_context) => LandingPage()));
   }
 }

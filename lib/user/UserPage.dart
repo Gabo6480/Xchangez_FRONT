@@ -4,7 +4,6 @@ import 'package:Xchangez/extensions/CircleImage.dart';
 import 'package:Xchangez/extensions/HoverText.dart';
 import 'package:Xchangez/extensions/StarCounter.dart';
 import 'package:Xchangez/model/Usuario.dart';
-import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
 import 'package:Xchangez/CustomGridView.dart';
 import 'package:Xchangez/services/api.lista.dart';
@@ -14,11 +13,10 @@ import 'package:Xchangez/services/api.valoracion.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../model/Lista.dart';
 import 'ListaCustomList.dart';
-import 'ListaNewListForm.dart';
+
+import 'package:Xchangez/CreationAlerts.dart';
 
 class UserPage extends StatefulWidget {
   UserPage(this.userID, {Key key})
@@ -38,155 +36,10 @@ class _UserPageState extends State<UserPage>
 
   Widget _floatingButton = SizedBox();
 
-  final listFormKey = GlobalKey<ListaNewListFormState>();
-
   Usuario authUser;
   void _getUser() async {
     authUser = await APIServices.getUser(widget.userID);
     setState(() {});
-  }
-
-  void _deleteLista(Lista list) {
-    ThemeData theme = Theme.of(context);
-    Alert(
-        title: "¿Está seguro que desea eliminar la lista: " + list.nombre + "?",
-        desc: "Este es un cambio permanente.",
-        context: context,
-        type: AlertType.warning,
-        buttons: [
-          DialogButton(
-              color: theme.primaryColor,
-              child: Text(
-                "Aceptar",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () async {
-                if (await ListaServices.delete(list.id)) {
-                  Navigator.pop(context);
-                  _getUser();
-                }
-              }),
-          DialogButton(
-            color: Colors.redAccent,
-            child: Text(
-              "Cancelar",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-          )
-        ]).show();
-  }
-
-  void _editLista(Lista list) {
-    ThemeData theme = Theme.of(context);
-    Alert(
-        title: "Editar lista",
-        context: context,
-        type: AlertType.none,
-        content: ListaNewListForm(
-          key: listFormKey,
-          editLista: list,
-        ),
-        buttons: [
-          DialogButton(
-              color: theme.primaryColor,
-              child: Text(
-                "Aceptar",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () {
-                listFormKey.currentState.save();
-                Navigator.pop(context);
-                _getUser();
-              }),
-          DialogButton(
-            color: Colors.redAccent,
-            child: Text(
-              "Cancelar",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-          )
-        ]).show();
-  }
-
-  void _createLista() {
-    ThemeData theme = Theme.of(context);
-
-    Alert(
-        title: "Crear nueva lista",
-        context: context,
-        type: AlertType.none,
-        content: ListaNewListForm(
-          key: listFormKey,
-        ),
-        buttons: [
-          DialogButton(
-              color: theme.primaryColor,
-              child: Text(
-                "Aceptar",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () {
-                listFormKey.currentState.save();
-                Navigator.pop(context);
-                _getUser();
-              }),
-          DialogButton(
-            color: Colors.redAccent,
-            child: Text(
-              "Cancelar",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-          )
-        ]).show();
-  }
-
-  final _newProductStateKey = GlobalKey<ProductNewItemState>();
-  void _createPublicacion() {
-    Alert(
-        title: "Nueva publicación",
-        context: context,
-        type: AlertType.none,
-        content: ProductNewItem(
-          key: _newProductStateKey,
-        ),
-        buttons: [
-          DialogButton(
-            color: Colors.greenAccent,
-            child: Text(
-              "Publicar",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () async {
-              if (await _newProductStateKey.currentState.saveAs(false)) {
-                Navigator.pop(context);
-                _getUser();
-              }
-            },
-          ),
-          DialogButton(
-            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-            child: Text(
-              "Guardar Borrador",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () {
-              _newProductStateKey.currentState.saveAs(true);
-              Navigator.pop(context);
-              _getUser();
-            },
-          ),
-          DialogButton(
-            color: Colors.redAccent,
-            child: Text(
-              "Cancelar",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            onPressed: () => Navigator.pop(context),
-          )
-        ]).show();
   }
 
   bool _showButton = false;
@@ -213,12 +66,14 @@ class _UserPageState extends State<UserPage>
           _floatingButton = FloatingActionButton(
               child: Icon(Icons.note_add_outlined),
               backgroundColor: theme.primaryColor,
-              onPressed: _createPublicacion);
+              onPressed: () =>
+                  createPublicacion(context, updateParent: _getUser));
           setState(() {});
           break;
         case 1:
           _floatingButton = FloatingActionButton(
-              child: Icon(Icons.post_add), onPressed: _createLista);
+              child: Icon(Icons.post_add),
+              onPressed: () => createLista(context, updateParent: _getUser));
           setState(() {});
           break;
         case 2:
@@ -399,8 +254,11 @@ class _UserPageState extends State<UserPage>
                                   if (index < snapshot.data.length)
                                     return ListaCustomList(
                                       list: snapshot.data[index],
-                                      delete: _deleteLista,
-                                      edit: _editLista,
+                                      delete: (lista) => deleteLista(
+                                          context, lista,
+                                          updateParent: _getUser),
+                                      edit: (lista) => editLista(context, lista,
+                                          updateParent: _getUser),
                                       isOwner: widget.isLoggedUser,
                                     );
                                   else if (snapshot.data.isNotEmpty)

@@ -20,13 +20,12 @@ class _LandingPageState extends State<LandingPage> {
     if (APIServices.loggedInUser == null) {
       if (await APIServices.getRememberFromStorage()) {
         await APIServices.getAuthUser();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_context) => LandingPage()));
       } else {
         await APIServices.disposeToken();
       }
     }
-
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_context) => LandingPage()));
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:Xchangez/LandingPage.dart';
 import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/services/api.services.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 
 import 'CustomNavBar.dart';
 import 'package:Xchangez/user/UserIconButton.dart';
+
+import 'package:Xchangez/CreationAlerts.dart';
 
 class CustomScaffold extends StatefulWidget {
   CustomScaffold(this.body, {Key key, this.floatingActionButton})
@@ -74,8 +77,60 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                 width: width,
                 height: mQuery.size.height,
                 child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   color: theme.backgroundColor,
-                  child: UserIconButton(authUser: authUser),
+                  child: ListTileTheme(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                          UserIconButton(authUser: authUser),
+                          Divider(
+                            height: 30,
+                            color: Colors.black26,
+                            thickness: 1,
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.home),
+                            title: Text("Inicio"),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_context) => LandingPage()));
+                            },
+                          ),
+                        ] +
+                        (APIServices.loggedInUser != null
+                            ? <Widget>[
+                                ListTile(
+                                  leading: Icon(Icons.note_add_outlined),
+                                  title: Text("Nueva Publicacion"),
+                                  onTap: () {
+                                    createPublicacion(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.post_add),
+                                  title: Text("Nueva Lista"),
+                                  onTap: () {
+                                    createLista(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.logout),
+                                  title: Text("Cerrar Sesión"),
+                                  onTap: () async {
+                                    await APIServices.disposeToken();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_context) =>
+                                                LandingPage()));
+                                  },
+                                )
+                              ]
+                            : <Widget>[]),
+                  )),
                 ))
           ],
         ));
