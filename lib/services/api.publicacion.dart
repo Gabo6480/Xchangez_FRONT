@@ -9,6 +9,7 @@ import 'package:Xchangez/services/api.services.dart';
 // pero enfocada al controlador PublicacionController de la Web API
 class PublicacionServices {
   static final String _urlCreate = "Publicacion/Create";
+  static final String _urlAddVisit = "Publicacion/AgregarUnaVisita";
   static final String _urlAddFile = "Publicacion/AddFile";
   static final String _urlGetById = "Publicacion/";
   static final String _urlDeleteById = "Publicacion/";
@@ -144,6 +145,26 @@ class PublicacionServices {
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
         response.statusCode == 204) {
+      return true;
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  // metodo para eliminar una publicacion por su id
+  static Future<bool> addVisita(int id) async {
+    // creamos la url
+    String endpointUrl =
+        APIServices.getEndPoint(_urlAddVisit, {"id": id.toString()});
+    Map<String, String> headers = await APIServices.getHeaders(false);
+    final http.Response response =
+        await http.post(endpointUrl, headers: headers);
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      print("Visitao");
       return true;
     } else if (response.statusCode == 401) {
       throw Exception("");

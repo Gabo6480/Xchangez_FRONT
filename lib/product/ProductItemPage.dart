@@ -35,6 +35,8 @@ class _ProductItemState extends State<ProductItemPage> {
   void initState() {
     super.initState();
 
+    PublicacionServices.addVisita(widget.post.id);
+
     widget.post.caracteristicas.forEach((key, value) {
       _caracteristicas.add(ListTile(
         title: Text(key,

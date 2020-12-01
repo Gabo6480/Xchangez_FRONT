@@ -5,6 +5,7 @@ enum Estado { indefinido, nuevo, usado }
 class Publicacion {
   int id;
   int idUsuario;
+  int visitas;
   String thumbnail;
   String titulo;
   String descripcion;
@@ -19,6 +20,7 @@ class Publicacion {
   Publicacion(
       {this.id = 0,
       this.idUsuario = 0,
+      this.visitas = 0,
       this.thumbnail =
           "https://static.addtoany.com/images/dracaena-cinnabari.jpg",
       this.titulo = "",
@@ -38,6 +40,7 @@ class Publicacion {
   factory Publicacion.fromJson(Map<String, dynamic> j) => Publicacion(
       id: j["id"],
       idUsuario: j["idUsuario"],
+      visitas: j["visitas"],
       thumbnail: j["thumbnail"] ??
           "https://static.addtoany.com/images/dracaena-cinnabari.jpg",
       titulo: j["titulo"],
@@ -53,6 +56,7 @@ class Publicacion {
   Map<String, dynamic> toJson() => {
         "id": this.id ?? 0,
         "idUsuario": this.idUsuario ?? 0,
+        "visitas": this.visitas ?? 0,
         "thumbnail": this.thumbnail ?? "",
         "titulo": this.titulo ?? "",
         "descripcion": this.descripcion ?? "",
