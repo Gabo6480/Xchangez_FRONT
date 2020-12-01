@@ -92,7 +92,8 @@ class _CommentTileState extends State<CommentTile> {
                     builder: (_context) =>
                         UserPage(widget.comment.idUsuario)))),
         Text(
-            "  -  " + DateFormat('dd/MM/yyyy').format(widget.comment.fechaAlta),
+            "  -  " +
+                DateFormat('dd/MM/yyyy HH:mm').format(widget.comment.fechaAlta),
             style: TextStyle(fontSize: 12, color: Colors.grey))
       ]),
       subtitle: Column(
@@ -178,7 +179,9 @@ class ResponseTile extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (_context) => UserPage(comment.idUsuario)))),
-          Text("  -  " + DateFormat('dd/MM/yyyy').format(comment.fechaAlta),
+          Text(
+              "  -  " +
+                  DateFormat('dd/MM/yyyy HH:mm').format(comment.fechaAlta),
               style: TextStyle(fontSize: 12, color: Colors.grey))
         ]),
         subtitle: Text(comment.contenido),

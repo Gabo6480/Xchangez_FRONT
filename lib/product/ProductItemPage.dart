@@ -1,3 +1,4 @@
+import 'package:Xchangez/extensions/StarCounter.dart';
 import 'package:Xchangez/product/CommentTile.dart';
 import 'package:Xchangez/CustomCarousel.dart';
 import 'package:Xchangez/extensions/CircleImage.dart';
@@ -231,49 +232,19 @@ class UserScoreCard extends StatelessWidget {
   UserScoreCard({Key key, this.user}) : super(key: key);
 
   final Usuario user;
-  final List<Widget> stars = List();
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
-    double _score = user.valoracion;
-    for (int i = 0; i < 5; i++) {
-      stars.add(Icon(
-        _score >= 1.0
-            ? Icons.star
-            : (_score >= 0.25 ? Icons.star_half : Icons.star_outline),
-        color: theme.accentColor,
-      ));
-      _score -= 1.0;
-    }
-
     return ListTile(
-      leading: CircleImage(
-        image: NetworkImage(user.imagenPerfil),
-      ),
-      title: HoverText(user.nombre + " " + user.apellido,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_context) => UserPage(user.id)))),
-      subtitle: Row(
-        children: stars +
-            [
-              SizedBox(
-                width: 8,
-              ),
-              Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                      color: theme.primaryColor,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Text(
-                    user.valoracion.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ))
-            ],
-      ),
-    );
+        leading: CircleImage(
+          image: NetworkImage(user.imagenPerfil),
+        ),
+        title: HoverText(user.nombre + " " + user.apellido,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (_context) => UserPage(user.id)))),
+        subtitle: StarCounter(
+          score: user.valoracion,
+        ));
   }
 }

@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:Xchangez/extensions/CircleImage.dart';
+import 'package:Xchangez/extensions/HoverText.dart';
+import 'package:Xchangez/extensions/StarCounter.dart';
 import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/scaffold/CustomScaffold.dart';
@@ -7,6 +10,7 @@ import 'package:Xchangez/CustomGridView.dart';
 import 'package:Xchangez/services/api.lista.dart';
 import 'package:Xchangez/services/api.publicacion.dart';
 import 'package:Xchangez/services/api.services.dart';
+import 'package:Xchangez/services/api.valoracion.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -341,7 +345,7 @@ class _UserPageState extends State<UserPage>
                       style:
                           TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                     ),
-                    _UserScore(
+                    StarCounter(
                       score: authUser.valoracion,
                     ),
                     Divider(
@@ -412,58 +416,71 @@ class _UserPageState extends State<UserPage>
                           },
                         )),
                     Container(
-                      alignment: Alignment.center,
-                      child: Text('Display Tab 3',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold)),
-                    ),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(10),
+                        child: FutureBuilder(
+                          future:
+                              ValoracionServices.getAllForUserId(widget.userID),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                        ConnectionState.none &&
+                                    snapshot.hasData == null ||
+                                snapshot.data == null)
+                              return Text('Cargando...',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold));
+                            else
+                              return ListView.builder(
+                                itemCount: snapshot.data.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index < snapshot.data.length)
+                                    return ListTile(
+                                        leading: CircleImage(
+                                          image: NetworkImage(snapshot
+                                              .data[index].rutaImagenAvatar),
+                                        ),
+                                        title: HoverText(
+                                            snapshot.data[index].nombreCompleto,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                            onTap: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_context) =>
+                                                        UserPage(snapshot
+                                                            .data[index]
+                                                            .idUsuario)))),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            StarCounter(
+                                              score:
+                                                  snapshot.data[index].cantidad,
+                                            ),
+                                            Text(
+                                                snapshot.data[index].comentario)
+                                          ],
+                                        ));
+                                  else if (snapshot.data.isNotEmpty)
+                                    return SizedBox();
+                                  else
+                                    return Text('Aquí no hay nada...',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold));
+                                },
+                              );
+                          },
+                        ))
                   ]))
             ]),
             floatingActionButton: _showButton ? _floatingButton : SizedBox(),
           )
         : SizedBox();
-  }
-}
-
-class _UserScore extends StatelessWidget {
-  _UserScore({Key key, this.score}) : super(key: key);
-
-  final double score;
-  final List<Widget> stars = List();
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-
-    double _score = score;
-    for (int i = 0; i < 5; i++) {
-      stars.add(Icon(
-        _score >= 1.0
-            ? Icons.star
-            : (_score >= 0.25 ? Icons.star_half : Icons.star_outline),
-        color: theme.accentColor,
-      ));
-      _score -= 1.0;
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: stars +
-          [
-            SizedBox(
-              width: 8,
-            ),
-            Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                    color: theme.primaryColor,
-                    borderRadius: BorderRadius.circular(50)),
-                child: Text(
-                  score.toString(),
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ))
-          ],
-    );
   }
 }
