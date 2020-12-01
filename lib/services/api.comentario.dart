@@ -48,7 +48,7 @@ class ComentarioServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urlGetByPostId) + id.toString();
-    Map<String, String> headers = await APIServices.getHeaders(false);
+    Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 ||

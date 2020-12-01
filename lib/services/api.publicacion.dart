@@ -158,7 +158,7 @@ class PublicacionServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urlAddVisit, {"id": id.toString()});
-    Map<String, String> headers = await APIServices.getHeaders(false);
+    Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.post(endpointUrl, headers: headers);
     if (response.statusCode == 200 ||
@@ -197,7 +197,7 @@ class PublicacionServices {
     // creamos la url
     String endpointUrl =
         APIServices.getEndPoint(_urlGetAllFromUser) + userID.toString();
-    Map<String, String> headers = await APIServices.getHeaders(false);
+    Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
