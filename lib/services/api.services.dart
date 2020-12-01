@@ -37,7 +37,7 @@ class APIServices {
       Uri.https(_urlHost, "/api/" + url, queryParameters).toString();
 
   // metodo para logearse, regresa un UserToken
-  static Future<UserToken> login(UserInfo usuario) async {
+  static Future<UserToken> login(UserInfo usuario, bool remember) async {
     // creamos la url
     String endpointUrl = getEndPoint(_urlAuthLogin);
     Map<String, String> headers = await getHeaders(false);
@@ -48,6 +48,7 @@ class APIServices {
       // guardamos el token en el storage
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(tokenStorageKeyName, token.token);
+      prefs.setString("remember", remember.toString());
 
       await getAuthUser();
 
@@ -183,5 +184,11 @@ class APIServices {
   static Future<String> _getTokenFromStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(tokenStorageKeyName) ?? "";
+  }
+
+  // metodo para obtener el token del usuario logeado
+  static Future<bool> getRememberFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("remember") == "true";
   }
 }

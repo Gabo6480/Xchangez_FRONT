@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     formKey.currentState.save();
     try {
-      UserToken userToken = await APIServices.login(usuario);
+      UserToken userToken = await APIServices.login(usuario, _remember);
       setState(() {
         _btnLogin.success();
       });
