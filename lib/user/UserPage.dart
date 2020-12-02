@@ -547,15 +547,19 @@ class _UserPageState extends State<UserPage>
                                                           UserPage(snapshot
                                                               .data[index]
                                                               .idUsuarioSeguido)))),
-                                          trailing: RaisedButton(
-                                            child: Text("Dejar de seguir"),
-                                            onPressed: () async {
-                                              if (await SeguidorServices.delete(
-                                                  snapshot.data[index]
-                                                      .idUsuarioSeguido))
-                                                _getUser();
-                                            },
-                                          ),
+                                          trailing: widget.isLoggedUser
+                                              ? RaisedButton(
+                                                  child:
+                                                      Text("Dejar de seguir"),
+                                                  onPressed: () async {
+                                                    if (await SeguidorServices
+                                                        .delete(snapshot
+                                                            .data[index]
+                                                            .idUsuarioSeguido))
+                                                      _getUser();
+                                                  },
+                                                )
+                                              : SizedBox(),
                                         ));
                                   else if (snapshot.data.isNotEmpty)
                                     return SizedBox();
