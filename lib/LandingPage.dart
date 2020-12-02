@@ -43,6 +43,11 @@ class _LandingPageState extends State<LandingPage> {
     return CustomScaffold(ListView(children: [
       CustomCarousel(
         height: carouselHeight,
+        items: [
+          Image.asset("assets/images/banner_1.jpg"),
+          Image.asset("assets/images/banner_2.jpg"),
+          Image.asset("assets/images/banner_3.jpg")
+        ],
       ),
       CustomListView("Popular", PublicacionServices.getAllRelevant()),
       CustomListView("Reciente", PublicacionServices.getAllRecent()),
