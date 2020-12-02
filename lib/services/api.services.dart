@@ -31,6 +31,8 @@ class APIServices {
   // url del endpoint de la api para obtener un usuario por Id
   static final String _urlAuthGetUsuario = "Auth/";
 
+  static final String _urlSetPrivate = "Auth/EstablecerPrivado/";
+
   // metodo que concatena la url de la api mas un endpoint
   static String getEndPoint(String url,
           [Map<String, String> queryParameters]) =>
@@ -96,6 +98,23 @@ class APIServices {
     }
   }
 
+  static Future<bool> setPrivate(bool isPrivate) async {
+    // creamos la url (ejemplo: https://localhost:44386/api/Auth/1)
+    String endpointUrl = getEndPoint(_urlSetPrivate) + isPrivate.toString();
+    Map<String, String> headers = await getHeaders(true);
+    final http.Response response =
+        await http.post(endpointUrl, headers: headers);
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return true;
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
   // metodo para actualizar una imagen del perfil
   static Future<bool> updateAvatar(PlatformFile imagen, int tipoImagen) async {
     // creamos la url (https://localhost:44386/api/Auth/UpdateAvatarImage)
@@ -152,6 +171,7 @@ class APIServices {
     int idUsuario = await _getIdUserFromToken();
     if (idUsuario == -1) return null;
     loggedInUser = await getUser(idUsuario);
+    print(json.encode(loggedInUser));
     return loggedInUser;
   }
 

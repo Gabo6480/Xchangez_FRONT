@@ -7,6 +7,7 @@ class ValoracionServices {
   static final String _urlCreate = "Valoracion/Create";
   static final String _urlGetAllForUser =
       "Valoracion/GetValoracionesByIdUsuarioValorado/";
+  static final String _urlHasScored = "Valoracion/YaFueValorado/";
 
   // metodo para crear un comentario
   static Future<Valoracion> create(Valoracion nodo) async {
@@ -36,6 +37,22 @@ class ValoracionServices {
       return (json.decode(response.body) as List)
           .map((e) => Valoracion.fromJson(e))
           .toList();
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  static Future<bool> hasAlreadyScored(int id) async {
+    String endpointUrl = APIServices.getEndPoint(_urlHasScored) + id.toString();
+    Map<String, String> headers = await APIServices.getHeaders(true);
+    final http.Response response =
+        await http.get(endpointUrl, headers: headers);
+    if (response.statusCode == 200 ||
+        response.statusCode == 201 ||
+        response.statusCode == 204) {
+      return response.body == "true";
     } else if (response.statusCode == 401) {
       throw Exception("");
     } else {

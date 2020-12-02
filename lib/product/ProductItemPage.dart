@@ -236,6 +236,7 @@ class UserScoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+        isThreeLine: true,
         leading: CircleImage(
           image: NetworkImage(user.imagenPerfil),
         ),

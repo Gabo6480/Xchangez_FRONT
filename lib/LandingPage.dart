@@ -46,6 +46,10 @@ class _LandingPageState extends State<LandingPage> {
       ),
       CustomListView("Popular", PublicacionServices.getAllRelevant()),
       CustomListView("Reciente", PublicacionServices.getAllRecent()),
+      APIServices.loggedInUser != null
+          ? CustomListView(
+              "De tus seguidos", PublicacionServices.getAllFromFollowing())
+          : SizedBox(),
       CustomListView("Variado", PublicacionServices.getAll())
     ]));
   }

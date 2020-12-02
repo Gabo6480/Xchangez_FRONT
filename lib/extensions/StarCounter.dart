@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class StarCounter extends StatelessWidget {
-  StarCounter({Key key, this.score}) : super(key: key);
+  StarCounter(
+      {Key key, this.score, this.mainAxisAlignment = MainAxisAlignment.start})
+      : super(key: key);
 
   final double score;
   final List<Widget> stars = List();
+  final MainAxisAlignment mainAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class StarCounter extends StatelessWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: mainAxisAlignment,
       children: stars +
           [
             SizedBox(

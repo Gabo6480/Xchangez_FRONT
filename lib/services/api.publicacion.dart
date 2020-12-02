@@ -23,6 +23,8 @@ class PublicacionServices {
   static final String _urlGet = "Publicacion/Publicaciones/";
   static final String _urlGetRelevant = "Publicacion/PublicacionesRelevantes/";
   static final String _urlGetRecent = "Publicacion/PublicacionesRecientes/";
+  static final String _urlGetFromFollowing =
+      "Publicacion/GetByUsuariosSeguidos";
 
   // metodo para crear una publicación
   static Future<Publicacion> create(Publicacion nodo) async {
@@ -254,6 +256,23 @@ class PublicacionServices {
     String endpointUrl =
         APIServices.getEndPoint(_urlGetRecent) + quantity.toString();
     Map<String, String> headers = await APIServices.getHeaders(false);
+    final http.Response response =
+        await http.get(endpointUrl, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return (json.decode(response.body) as List)
+          .map((e) => Publicacion.fromJson(e))
+          .toList();
+    } else if (response.statusCode == 401) {
+      throw Exception("");
+    } else {
+      throw response.body;
+    }
+  }
+
+  static Future<List<Publicacion>> getAllFromFollowing() async {
+    // creamos la url
+    String endpointUrl = APIServices.getEndPoint(_urlGetFromFollowing);
+    Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.get(endpointUrl, headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
