@@ -23,7 +23,9 @@ class Valoracion {
         idUsuario: json["idUsuario"],
         idUsuarioValorado: json["idUsuarioValorado"],
         nombreCompleto: json["nombreCompleto"],
-        rutaImagenAvatar: json["rutaImagenAvatar"],
+        rutaImagenAvatar: (json["rutaImagenAvatar"] as String).isEmpty
+            ? "http://ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            : json["rutaImagenAvatar"],
         cantidad: json["cantidad"],
         comentario: json["comentario"],
         fechaAlta: DateTime.tryParse(json["fechaAlta"]),

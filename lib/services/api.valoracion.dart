@@ -12,7 +12,8 @@ class ValoracionServices {
   // metodo para crear un comentario
   static Future<Valoracion> create(Valoracion nodo) async {
     // creamos la url
-    String endpointUrl = APIServices.getEndPoint(_urlCreate);
+    String endpointUrl = APIServices.getEndPoint(
+        _urlCreate, {"idUsuario": nodo.idUsuarioValorado.toString()});
     Map<String, String> headers = await APIServices.getHeaders(true);
     final http.Response response =
         await http.post(endpointUrl, headers: headers, body: jsonEncode(nodo));

@@ -365,35 +365,52 @@ class _UserPageState extends State<UserPage>
                                 itemCount: snapshot.data.length + 1,
                                 itemBuilder: (context, index) {
                                   if (index < snapshot.data.length)
-                                    return ListTile(
-                                        leading: CircleImage(
-                                          image: NetworkImage(snapshot
-                                              .data[index].rutaImagenAvatar),
-                                        ),
-                                        title: HoverText(
-                                            snapshot.data[index].nombreCompleto,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                            onTap: () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (_context) =>
-                                                        UserPage(snapshot
-                                                            .data[index]
-                                                            .idUsuario)))),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            StarCounter(
-                                              score:
-                                                  snapshot.data[index].cantidad,
-                                            ),
-                                            Text(
-                                                snapshot.data[index].comentario)
+                                    return Container(
+                                        padding: EdgeInsets.all(20),
+                                        margin: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black26,
+                                                offset: Offset(0, 2),
+                                                spreadRadius: 1,
+                                                blurRadius: 2)
                                           ],
-                                        ));
+                                        ),
+                                        child: ListTile(
+                                            leading: CircleImage(
+                                              image: NetworkImage(snapshot
+                                                  .data[index]
+                                                  .rutaImagenAvatar),
+                                            ),
+                                            title: HoverText(
+                                                snapshot
+                                                    .data[index].nombreCompleto,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
+                                                onTap: () => Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (_context) =>
+                                                            UserPage(snapshot
+                                                                .data[index]
+                                                                .idUsuario)))),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                StarCounter(
+                                                  score: snapshot
+                                                      .data[index].cantidad,
+                                                ),
+                                                Text(snapshot
+                                                    .data[index].comentario)
+                                              ],
+                                            )));
                                   else if (snapshot.data.isNotEmpty)
                                     return SizedBox();
                                   else

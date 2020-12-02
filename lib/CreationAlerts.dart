@@ -2,6 +2,7 @@ import 'package:Xchangez/model/Lista.dart';
 import 'package:Xchangez/model/Usuario.dart';
 import 'package:Xchangez/product/ProductNewItem.dart';
 import 'package:Xchangez/services/api.lista.dart';
+import 'package:Xchangez/services/api.valoracion.dart';
 import 'package:Xchangez/user/ListaNewListForm.dart';
 import 'package:Xchangez/user/ValoracionNewForm.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +161,7 @@ void createValoracion(BuildContext context, Usuario user,
       title: "Valorar a " + user.nombre + " " + user.apellido,
       type: AlertType.none,
       content: ValoracionNewForm(
+        user.id,
         key: _newStateKey,
       ),
       buttons: [
@@ -169,7 +171,14 @@ void createValoracion(BuildContext context, Usuario user,
             "Valorar",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () async {},
+          onPressed: () async {
+            if (await ValoracionServices.create(
+                    _newStateKey.currentState.save()) !=
+                null) {
+              if (updateParent != null) updateParent();
+              Navigator.pop(context);
+            }
+          },
         ),
         DialogButton(
           color: Colors.redAccent,
