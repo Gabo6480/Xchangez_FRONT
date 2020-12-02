@@ -86,7 +86,7 @@ class _CustomNavState extends State<CustomNavBar> {
                             icon: NotificationBadge(
                                 child: Icon(Icons.chat_bubble),
                                 notifications: 0),
-                            onPressed: () {}),
+                            onPressed: null),
                       ],
                     )
                   : SizedBox(
